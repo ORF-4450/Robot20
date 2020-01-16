@@ -18,6 +18,7 @@ Operates the robot "TBA" for FRC game "INFINITE RECHARGE".
 Version 20.0
 
 *	Cloned from Robot19. 2019 specific code removed, cleaned up to be baseline for 2020 season.
+*	Example code to handle the color wheel using REV ColorSensor V3 added.
 
 R. Corn
-January 1, 2020
+January 15, 2020
