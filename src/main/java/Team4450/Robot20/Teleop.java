@@ -290,7 +290,8 @@ class Teleop
 					break;
 		  }
 		} else {
-			// no data received yet.
+			// no data received yet default to red.
+			targetColor = RevColorSensor.getMatchColor(0.561, 0.232, 0.114);
 		}		
 		
 		if (targetColor != null) colorSensor.addColorMatch(targetColor);
@@ -298,7 +299,7 @@ class Teleop
 	
 	// Match current color read from sensor to the target color in the color matcher
 	// and returns true if current color matches target color with confidence
-	// >= 90%.
+	// >= 85%.
 	
 	private boolean colorMatch()
 	{
@@ -306,7 +307,10 @@ class Teleop
 
 		ColorMatchResult matchResult = colorSensor.matchClosestColor(color);
 
-		if (matchResult.confidence >= 90)
+		//LCD.printLine(6, "color match result r=%f g=%f b=%f  conf=%f", matchResult.color.red, matchResult.color.green,
+		//		matchResult.color.blue, matchResult.confidence);
+
+		if (matchResult.confidence >= .85)
 			return true;
 		else
 			return false;
