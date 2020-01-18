@@ -10,8 +10,9 @@ import Team4450.Lib.NavX.NavXEvent;
 import Team4450.Lib.NavX.NavXEventListener;
 import Team4450.Lib.NavX.NavXEventType;
 import Team4450.Robot20.Devices;
-
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -92,7 +93,7 @@ class Teleop
 		
 		Devices.utilityStick.addJoyStickEventListener(new UtilityStickListener());
 		
-		// Invert driving joy stick Y axis so + values mean forward.
+		// Invert driving joy stick Y axis so + values mean f.
 		Devices.leftStick.invertY(true);
 		Devices.rightStick.invertY(true);
 		
@@ -107,6 +108,10 @@ class Teleop
 		// Reset wheel encoders.
 		Devices.leftEncoder.reset();
 		Devices.rightEncoder.reset();
+		
+		// Reset climber gyro.
+		
+		Devices.gyro.reset();
 		
 		// Put subsystem objects into start up state.
 		Devices.gearBox.enable();
@@ -145,6 +150,7 @@ class Teleop
 			LCD.printLine(4, "yaw=%.2f, total=%.2f, rate=%.2f, hdng=%.2f", Devices.navx.getYaw(), 
 					Devices.navx.getTotalYaw(), Devices.navx.getYawRate(), Devices.navx.getHeading());
 			LCD.printLine(5, "color match=%b", colorMatch());
+			LCD.printLine(6, "gyro angle=%f  center=%d  offset=%f", Devices.gyro.getAngle(), Devices.gyro.getCenter(), Devices.gyro.getOffset());
 
 			//LCD.printLine(10, "pressureV=%.2f  psi=%d  ustb=%b", robot.monitorCompressorThread.getVoltage(), 
 			//		robot.monitorCompressorThread.getPressure(), Devices.utilityStick.GetCurrentState(JoyStickButtonIDs.TOP_BACK));

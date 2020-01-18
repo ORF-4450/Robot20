@@ -34,6 +34,7 @@ Analog I/O Ports
 Port	Device			Description
 -----------------------------------------------------------------------------------
 0		Pressure Sensor	Report air pressure.
+1		Analog Gyro		Gyro on climber hook to measure level.
 
 
 Left Joystick

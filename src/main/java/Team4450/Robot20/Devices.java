@@ -11,6 +11,7 @@ import Team4450.Lib.SRXMagneticEncoderRelative;
 import Team4450.Lib.Util;
 import Team4450.Lib.ValveDA;
 import Team4450.Lib.JoyStick.JoyStickButtonIDs;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -26,7 +27,7 @@ public class Devices
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
 	  
-	  public static DifferentialDrive		robotDrive;
+	  public static DifferentialDrive	robotDrive;
 	  
 	  public static JoyStick			rightStick = null;
 	  public static JoyStick			leftStick = null;
@@ -44,6 +45,8 @@ public class Devices
 	  public final static DriverStation				ds = DriverStation.getInstance();
 
 	  public static NavX				navx;
+		
+	  public static AnalogGyro			gyro = new AnalogGyro(1);
 
 	  // Encoder (regular type) is plugged into dio port n:
 	  // orange=+5v blue=signal, dio port n+1: black=gnd yellow=signal. 
