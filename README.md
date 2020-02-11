@@ -1,7 +1,7 @@
-# Robot20
+# Robot20-RAC
 FRC Team 4450 2020 Robot Control program.
 
-## Base example.
+##This Mr. Corn's example.
 
 This is the 2020 competition robot control program created by the Olympia Robotics Federation (FRC Team 4450).
 Operates the robot "TBA" for FRC game "INFINITE RECHARGE".
@@ -15,6 +15,12 @@ Operates the robot "TBA" for FRC game "INFINITE RECHARGE".
 ### If RobotLib gets an update:
 1) download the RobotLib.json file from the RobotLib Github repo and drop it into the vendordeps folder inside the project folder. Build the project.
 ****************************************************************************************************************
+Version 20.1-RAC
+
+*	Added subsystem classes for Shooter, Climber and  Pickup.
+
+R. Corn, February 11 2020
+
 Version 20.0
 
 *	Cloned from Robot19. 2019 specific code removed, cleaned up to be baseline for 2020 season.

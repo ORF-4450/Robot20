@@ -2,6 +2,8 @@
  * 2020 competition robot code.
  *
  * For Robot "tba" built for FRC game "INFINITE RECHARGE".
+ * 
+ * This is Mr. Corn's version.
 */
 
 package Team4450.Robot20;
@@ -24,7 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot 
 {
-  static final String  	PROGRAM_NAME = "RAC20-02.08.20-01";
+  static final String  	PROGRAM_NAME = "RAC20-02.11.20-01";
 
   public Properties		robotProperties;
   
@@ -199,6 +201,9 @@ public class Robot extends SampleRobot
 
           // Disable subsystems.
           if (Devices.gearBox != null) Devices.gearBox.disable();
+          if (Devices.climber != null) Devices.climber.disable();
+          if (Devices.pickup != null) Devices.pickup.disable();
+          if (Devices.shooter != null) Devices.shooter.disable();
 
 		  LCD.printLine(1, "Mode: Disabled");
 		  

@@ -115,7 +115,10 @@ class Teleop
 		
 		// Put subsystem objects into start up state.
 		Devices.gearBox.enable();
-		
+		Devices.climber.enable();
+		Devices.pickup.enable();
+		Devices.shooter.enable();
+
 		// Motor safety turned on.
 		Devices.robotDrive.setSafetyEnabled(true);
 

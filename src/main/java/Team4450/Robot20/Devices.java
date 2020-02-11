@@ -59,6 +59,9 @@ public class Devices
 	  private static boolean			talonBrakeMode;
 	  
 	  public static GearBox				gearBox;
+	  public static Shooter				shooter;
+	  public static Climber				climber;
+	  public static Pickup				pickup;
 	  
 	  // Private constructor prevents creation of any instances of this "static" class.
 	  
@@ -138,6 +141,10 @@ public class Devices
  		  // Create instances of the singleton subsystem classes.
  		  
  		  gearBox = GearBox.getInstance(robot);
+ 		  
+ 		  shooter = Shooter.getInstance(robot);
+ 		  climber = Climber.getInstance(robot);
+ 		  pickup = Pickup.getInstance(robot);
 	  }
 
 	  // Initialize and Log status indication from CANTalon. If we see an exception
