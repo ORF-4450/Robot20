@@ -7,6 +7,7 @@ Port	Device			Description
 2		CanTalon		Left rear drive motor.
 3		CanTalon		Right front drive motor.
 4		CanTalon		Right rear drive motor.
+5		CanTalon		Shooter motor.
 
 
 PWM Ports

@@ -111,7 +111,7 @@ class Teleop
 		
 		// Reset climber gyro.
 		
-		Devices.gyro.reset();
+		//Devices.gyro.reset();
 		
 		// Put subsystem objects into start up state.
 		Devices.gearBox.enable();
@@ -150,7 +150,8 @@ class Teleop
 			LCD.printLine(4, "yaw=%.2f, total=%.2f, rate=%.2f, hdng=%.2f", Devices.navx.getYaw(), 
 					Devices.navx.getTotalYaw(), Devices.navx.getYawRate(), Devices.navx.getHeading());
 			LCD.printLine(5, "color match=%b", colorMatch());
-			LCD.printLine(6, "gyro angle=%f  center=%d  offset=%f", Devices.gyro.getAngle(), Devices.gyro.getCenter(), Devices.gyro.getOffset());
+			LCD.printLine(7, "shooter rpm=%d", Devices.shooterEncoder.getRPM());
+			//LCD.printLine(6, "gyro angle=%f  center=%d  offset=%f", Devices.gyro.getAngle(), Devices.gyro.getCenter(), Devices.gyro.getOffset());
 
 			//LCD.printLine(10, "pressureV=%.2f  psi=%d  ustb=%b", robot.monitorCompressorThread.getVoltage(), 
 			//		robot.monitorCompressorThread.getPressure(), Devices.utilityStick.GetCurrentState(JoyStickButtonIDs.TOP_BACK));
@@ -207,6 +208,8 @@ class Teleop
 					//Devices.robotDrive.curvatureDrive(rightY, rightX, rightStick.GetLatchedState(JoyStickButtonIDs.TRIGGER));
 			}
 
+			Devices.shooterTalon.set(utilY);
+			
 			if (firsttime) Util.consoleLog("after first loop");
 			
 			firsttime = false;

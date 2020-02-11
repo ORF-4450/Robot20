@@ -26,6 +26,7 @@ public class Devices
 {
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
+	  public static WPI_TalonSRX		shooterTalon;
 	  
 	  public static DifferentialDrive	robotDrive;
 	  
@@ -46,14 +47,14 @@ public class Devices
 
 	  public static NavX				navx;
 		
-	  public static AnalogGyro			gyro = new AnalogGyro(1);
+	  //public static AnalogGyro			gyro = new AnalogGyro(1);
 
 	  // Encoder (regular type) is plugged into dio port n:
 	  // orange=+5v blue=signal, dio port n+1: black=gnd yellow=signal. 
 	  //public final static Encoder		winchEncoder = new Encoder(0, 1, true, EncodingType.k4X);
 	  
 	  // SRX magnetic encoder plugged into a CAN Talon.
-	  public static SRXMagneticEncoderRelative	leftEncoder, rightEncoder;
+	  public static SRXMagneticEncoderRelative	leftEncoder, rightEncoder, shooterEncoder;
 	  
 	  private static boolean			talonBrakeMode;
 	  
@@ -75,12 +76,16 @@ public class Devices
 		  RFCanTalon = new WPI_TalonSRX(3);	
 		  RRCanTalon = new WPI_TalonSRX(4);	
 		  
+		  shooterTalon = new WPI_TalonSRX(5);
+		  
 	      // Initialize CAN Talons and write status to log so we can verify
 	      // all the Talons are connected.
 	      InitializeCANTalon(LFCanTalon);
 	      InitializeCANTalon(LRCanTalon);
 	      InitializeCANTalon(RFCanTalon);
 	      InitializeCANTalon(RRCanTalon);
+	      
+	      InitializeCANTalon(shooterTalon);
 
 	      // Configure CAN Talons with correct inversions.
 	      LFCanTalon.setInverted(true);
@@ -91,6 +96,9 @@ public class Devices
 
 	      // Turn on brake mode for drive CAN Talons.
 	      SetCANTalonBrakeMode(true);
+	      
+	      shooterTalon.setInverted(true);
+	      shooterTalon.setNeutralMode(NeutralMode.Coast);
 	      
 	      // For 2020 robot, put rear talons into a differential drive object and set the
 	      // front talons to follow the rears.
@@ -103,10 +111,12 @@ public class Devices
 		  
 		  // Configure SRX encoders as needed for measuring velocity and distance. 
 		  // 5.8 is wheel diameter in inches. Adjust for each years robot.
-		  rightEncoder = new SRXMagneticEncoderRelative(RRCanTalon, 5.8);
-		  leftEncoder = new SRXMagneticEncoderRelative(LRCanTalon, 5.8);
+		  rightEncoder = new SRXMagneticEncoderRelative(RRCanTalon, 7.5);
+		  leftEncoder = new SRXMagneticEncoderRelative(LRCanTalon, 7.5);
 		  
 		  leftEncoder.setInverted(true);
+		  
+		  shooterEncoder = new SRXMagneticEncoderRelative(shooterTalon, 5.8);
 	      
    		  // Create launch pad with all buttons monitored and auto start of monitoring loop.
    		  // Will add event handler in Teleop class.
