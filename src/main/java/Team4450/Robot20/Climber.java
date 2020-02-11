@@ -50,6 +50,8 @@ public class Climber extends SubSystem
 	{
 		Util.consoleLog();
 		
+		disable();
+		
 		INSTANCE = null;
 	}
 

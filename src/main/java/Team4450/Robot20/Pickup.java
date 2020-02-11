@@ -1,10 +1,12 @@
 package Team4450.Robot20;
 
 import Team4450.Lib.Util;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Pickup extends SubSystem
 {
-	private Robot			robot;
+	private Robot		robot;
+	private boolean		extended = false, pickupRunning = false;
 	
 	// This variable used to make this class is a singleton.
 	
@@ -35,7 +37,10 @@ public class Pickup extends SubSystem
 	void enable()
 	{
 		Util.consoleLog();
-
+		
+		stop();
+		
+		retract();
 	}
 
 	@Override
@@ -43,6 +48,9 @@ public class Pickup extends SubSystem
 	{
 		Util.consoleLog();
 
+		stop();
+		
+		retract();
 	}
 
 	@Override
@@ -50,6 +58,8 @@ public class Pickup extends SubSystem
 	{
 		Util.consoleLog();
 
+		disable();
+		
 		INSTANCE = null;
 	}
 
@@ -58,6 +68,62 @@ public class Pickup extends SubSystem
 	{
 		Util.consoleLog();
 
+		SmartDashboard.putBoolean("Pickup", pickupRunning);
+		SmartDashboard.putBoolean("Pickup Extended", extended);
+	}
+	
+	public void extend()
+	{
+		Util.consoleLog();
+		
+		Devices.pickupValve.SetA();
+		
+		extended = true;
+		
+		updateDS();
+	}
+	
+	public void retract()
+	{
+		Util.consoleLog();
+
+		Devices.pickupValve.SetB();
+		
+		extended = false;
+		
+		updateDS();
+	}
+	
+	public void start()
+	{
+		Util.consoleLog();
+		
+		Devices.pickupVictor.set(.50);
+		
+		pickupRunning = true;
+		
+		updateDS();
+	}
+
+	public void stop()
+	{
+		Util.consoleLog();
+		
+		Devices.pickupVictor.stopMotor();
+	
+		pickupRunning = false;
+	
+		updateDS();
+	}
+	
+	public boolean isExtended()
+	{
+		return extended;
+	}
+	
+	public boolean isPickupRunning()
+	{
+		return pickupRunning;
 	}
 
 }

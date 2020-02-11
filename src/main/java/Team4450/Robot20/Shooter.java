@@ -50,6 +50,8 @@ public class Shooter extends SubSystem
 	{
 		Util.consoleLog();
 		
+		disable();
+		
 		INSTANCE = null;
 	}
 

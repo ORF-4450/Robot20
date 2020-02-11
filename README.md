@@ -1,7 +1,7 @@
 # Robot20-RAC
 FRC Team 4450 2020 Robot Control program.
 
-##This Mr. Corn's example.
+## This is Mr. Corn's example.
 
 This is the 2020 competition robot control program created by the Olympia Robotics Federation (FRC Team 4450).
 Operates the robot "TBA" for FRC game "INFINITE RECHARGE".

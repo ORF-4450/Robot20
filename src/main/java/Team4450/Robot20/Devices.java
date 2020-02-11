@@ -28,6 +28,8 @@ public class Devices
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
 	  public static WPI_TalonSRX		shooterTalon;
 	  
+	  public static WPI_VictorSPX		pickupVictor;
+	  
 	  public static DifferentialDrive	robotDrive;
 	  
 	  public static JoyStick			rightStick = null;
@@ -38,6 +40,7 @@ public class Devices
 	  public final static Compressor	compressor = new Compressor(0);		// Compressor class represents the PCM.
 
 	  public final static ValveDA		highLowValve = new ValveDA(0);			// For gearbox.
+	  public final static ValveDA		pickupValve = new ValveDA(1);			// For pickup arm.
 	  
 	  public final static AnalogInput	pressureSensor = new AnalogInput(0);
 	  
@@ -120,6 +123,9 @@ public class Devices
 		  leftEncoder.setInverted(true);
 		  
 		  shooterEncoder = new SRXMagneticEncoderRelative(shooterTalon, 5.8);
+
+		  // Create the Victor controllers.
+		  pickupVictor = new WPI_VictorSPX(6);
 	      
    		  // Create launch pad with all buttons monitored and auto start of monitoring loop.
    		  // Will add event handler in Teleop class.
