@@ -26,9 +26,7 @@ public class Devices
 {
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
-	  public static WPI_TalonSRX		shooterTalon;
-	  
-	  public static WPI_VictorSPX		pickupVictor;
+	  public static WPI_TalonSRX		shooterTalon, pickupTalon;
 	  
 	  public static DifferentialDrive	robotDrive;
 	  
@@ -83,7 +81,8 @@ public class Devices
 		  RRCanTalon = new WPI_TalonSRX(4);	
 		  
 		  shooterTalon = new WPI_TalonSRX(5);
-		  
+		  pickupTalon = new WPI_TalonSRX(6);
+
 	      // Initialize CAN Talons and write status to log so we can verify
 	      // all the Talons are connected.
 	      InitializeCANTalon(LFCanTalon);
@@ -124,9 +123,6 @@ public class Devices
 		  
 		  shooterEncoder = new SRXMagneticEncoderRelative(shooterTalon, 5.8);
 
-		  // Create the Victor controllers.
-		  pickupVictor = new WPI_VictorSPX(6);
-	      
    		  // Create launch pad with all buttons monitored and auto start of monitoring loop.
    		  // Will add event handler in Teleop class.
  		  launchPad = new LaunchPad(new Joystick(3));

@@ -8,7 +8,7 @@ Port	Device			Description
 3		CanTalon		Right front drive motor.
 4		CanTalon		Right rear drive motor.
 5		CanTalon		Shooter motor.
-6		VictorSPX		Pickup motor.
+6		CanTalon		Pickup motor.
 
 
 PWM Ports
