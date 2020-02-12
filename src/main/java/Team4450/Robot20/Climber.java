@@ -61,5 +61,4 @@ public class Climber extends SubSystem
 		Util.consoleLog();
 
 	}
-
 }

@@ -94,11 +94,11 @@ public class Pickup extends SubSystem
 		updateDS();
 	}
 	
-	public void start()
+	public void start(double power)
 	{
 		Util.consoleLog();
 		
-		Devices.pickupTalon.set(.50);
+		Devices.pickupTalon.set(power);
 		
 		pickupRunning = true;
 		

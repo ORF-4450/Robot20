@@ -90,6 +90,8 @@ AltDriveMode			boolean			True when alternate drive mode is enabled.
 Low Battery				boolean			True when battery is low.
 Overload				boolean			True when brownout has occurred.
 
-pickup					boolean			True when pickup motor is running.
-pickupExtended			boolean			True when pickup is extended.
+Pickup					boolean			True when pickup motor is running.
+PickupExtended			boolean			True when pickup is extended.
+Shooter					boolean			True when shooter motor is running.
+Belt					boolean			True when channel belt motor is running.
 		  

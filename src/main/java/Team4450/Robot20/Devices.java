@@ -52,6 +52,8 @@ public class Devices
 	  public final static DriverStation				ds = DriverStation.getInstance();
 
 	  public static NavX				navx;
+	  
+	  public static VisionLL			visionLL;
 		
 	  //public static AnalogGyro			gyro = new AnalogGyro(1);
 
@@ -68,6 +70,7 @@ public class Devices
 	  public static Shooter				shooter;
 	  public static Climber				climber;
 	  public static Pickup				pickup;
+	  public static Channel				channel;
 	  
 	  // Private constructor prevents creation of any instances of this "static" class.
 	  
@@ -167,6 +170,9 @@ public class Devices
  		  shooter = Shooter.getInstance(robot);
  		  climber = Climber.getInstance(robot);
  		  pickup = Pickup.getInstance(robot);
+ 		  channel = Channel.getInstance(robot);
+ 		  
+ 		  visionLL = VisionLL.getInstance(robot);
 	  }
 
 	  // Initialize and Log status indication from CANTalon. If we see an exception

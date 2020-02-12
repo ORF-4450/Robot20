@@ -118,6 +118,7 @@ class Teleop
 		Devices.climber.enable();
 		Devices.pickup.enable();
 		Devices.shooter.enable();
+		Devices.channel.enable();
 
 		// Motor safety turned on.
 		Devices.robotDrive.setSafetyEnabled(true);
