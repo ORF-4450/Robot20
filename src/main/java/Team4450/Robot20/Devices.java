@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -26,9 +28,12 @@ public class Devices
 {
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
-	  public static WPI_TalonSRX		shooterTalon, pickupTalon;
+	  public static WPI_TalonSRX		shooterTalon, pickupTalon, beltTalon;
+	  public static WPI_TalonSRX		winchFrontTalon, winchBackTalon, hookTalon;
 	  
 	  public static DifferentialDrive	robotDrive;
+	  
+	  public static SpeedControllerGroup	winchDrive;
 	  
 	  public static JoyStick			rightStick = null;
 	  public static JoyStick			leftStick = null;
@@ -82,6 +87,10 @@ public class Devices
 		  
 		  shooterTalon = new WPI_TalonSRX(5);
 		  pickupTalon = new WPI_TalonSRX(6);
+		  beltTalon = new WPI_TalonSRX(7);
+		  winchFrontTalon = new WPI_TalonSRX(8);
+		  winchBackTalon = new WPI_TalonSRX(9);
+		  hookTalon = new WPI_TalonSRX(10);
 
 	      // Initialize CAN Talons and write status to log so we can verify
 	      // all the Talons are connected.
@@ -91,6 +100,10 @@ public class Devices
 	      InitializeCANTalon(RRCanTalon);
 	      
 	      InitializeCANTalon(shooterTalon);
+	      InitializeCANTalon(beltTalon);
+	      InitializeCANTalon(winchFrontTalon);
+	      InitializeCANTalon(winchBackTalon);
+	      InitializeCANTalon(hookTalon);
 
 	      // Configure CAN Talons with correct inversions.
 	      LFCanTalon.setInverted(true);
@@ -104,6 +117,11 @@ public class Devices
 	      
 	      shooterTalon.setInverted(true);
 	      shooterTalon.setNeutralMode(NeutralMode.Coast);
+	      
+	      beltTalon.setNeutralMode(NeutralMode.Brake);
+	      winchFrontTalon.setNeutralMode(NeutralMode.Brake);
+	      winchBackTalon.setNeutralMode(NeutralMode.Brake);
+	      hookTalon.setNeutralMode(NeutralMode.Brake);
 	      
 	      // For 2020 robot, put rear talons into a differential drive object and set the
 	      // front talons to follow the rears.
@@ -122,6 +140,8 @@ public class Devices
 		  leftEncoder.setInverted(true);
 		  
 		  shooterEncoder = new SRXMagneticEncoderRelative(shooterTalon, 5.8);
+		  
+		  winchDrive = new SpeedControllerGroup(winchFrontTalon, winchBackTalon);
 
    		  // Create launch pad with all buttons monitored and auto start of monitoring loop.
    		  // Will add event handler in Teleop class.

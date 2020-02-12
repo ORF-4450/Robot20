@@ -9,6 +9,10 @@ Port	Device			Description
 4		CanTalon		Right rear drive motor.
 5		CanTalon		Shooter motor.
 6		CanTalon		Pickup motor.
+7		CanTalon		Belt motor.
+8		CanTalon		Winch front motor.
+9		CanTalon		Winch back motor.
+10		CanTalon		Hook motor.
 
 
 PWM Ports
