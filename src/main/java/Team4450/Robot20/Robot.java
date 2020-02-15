@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot 
 {
-  static final String  	PROGRAM_NAME = "RAC20-02.12.20-01";
+  static final String  	PROGRAM_NAME = "RAC20-02.14.20-01";
 
   public Properties		robotProperties;
   
@@ -201,10 +201,10 @@ public class Robot extends SampleRobot
 
           // Disable subsystems.
           if (Devices.gearBox != null) Devices.gearBox.disable();
-          if (Devices.climber != null) Devices.climber.disable();
-          if (Devices.pickup != null) Devices.pickup.disable();
-          if (Devices.shooter != null) Devices.shooter.disable();
-          if (Devices.channel != null) Devices.channel.disable();
+//          if (Devices.climber != null) Devices.climber.disable();
+//          if (Devices.pickup != null) Devices.pickup.disable();
+//          if (Devices.shooter != null) Devices.shooter.disable();
+//          if (Devices.channel != null) Devices.channel.disable();
 
 		  LCD.printLine(1, "Mode: Disabled");
 		  
