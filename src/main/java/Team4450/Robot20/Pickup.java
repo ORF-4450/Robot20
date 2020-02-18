@@ -98,7 +98,7 @@ public class Pickup extends SubSystem
 	{
 		Util.consoleLog();
 		
-		Devices.pickupTalon.set(power);
+		Devices.pickupVictor.set(power);
 		
 		pickupRunning = true;
 		
@@ -109,7 +109,7 @@ public class Pickup extends SubSystem
 	{
 		Util.consoleLog();
 		
-		Devices.pickupTalon.stopMotor();
+		Devices.pickupVictor.stopMotor();
 	
 		pickupRunning = false;
 	

@@ -71,7 +71,7 @@ public class Channel extends SubSystem
 	{
 		Util.consoleLog();
 		
-		Devices.beltTalon.stopMotor();
+		Devices.beltVictor.stopMotor();
 		
 		beltRunning = false;
 		
@@ -82,7 +82,7 @@ public class Channel extends SubSystem
 	{
 		Util.consoleLog();
 		
-		Devices.beltTalon.set(power);
+		Devices.beltVictor.set(power);
 		
 		beltRunning = true;
 		
