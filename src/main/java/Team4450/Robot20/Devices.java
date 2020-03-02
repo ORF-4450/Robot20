@@ -14,6 +14,8 @@ import Team4450.Lib.JoyStick.JoyStickButtonIDs;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
@@ -46,6 +48,8 @@ public class Devices
 	  public final static ValveDA		highLowValve = new ValveDA(0);			// For gearbox.
 	  public final static ValveDA		pickupValve = new ValveDA(2);			// For pickup arm.
 	  
+	  public static DigitalInput		winchSwitch = new DigitalInput(0);
+	  
 	  public final static AnalogInput	pressureSensor = new AnalogInput(0);
 	  
 	  public final static PowerDistributionPanel	pdp = new PowerDistributionPanel();
@@ -60,7 +64,7 @@ public class Devices
 
 	  // Encoder (regular type) is plugged into dio port n:
 	  // orange=+5v blue=signal, dio port n+1: black=gnd yellow=signal. 
-	  //public final static Encoder		winchEncoder = new Encoder(0, 1, true, EncodingType.k4X);
+	  public final static Encoder		winchEncoder = new Encoder(1, 2, true, EncodingType.k4X);
 	  
 	  // SRX magnetic encoder plugged into a CAN Talon.
 	  public static SRXMagneticEncoderRelative	leftEncoder, rightEncoder, shooterEncoder;
@@ -122,6 +126,8 @@ public class Devices
 	      
 //	      shooterTalon.setInverted(true);
 //	      shooterTalon.setNeutralMode(NeutralMode.Coast);
+	      
+	      winchFrontVictor.setInverted(true);
 	      
 	      beltVictor.setNeutralMode(NeutralMode.Brake);
 	      winchFrontVictor.setNeutralMode(NeutralMode.Brake);

@@ -38,6 +38,10 @@ Port	Device blk-pos	Description
 Digital I/O Ports
 Port	Device			Description
 -----------------------------------------------------------------------------------
+0		Limit Switch	Climber low position limit switch.
+1		Encoder			Winch encoder. Orange = 5v, blue = signal.
+2		Encoder			Winch encoder. black = ground, yellow = signal.
+
 
 Analog I/O Ports
 Port	Device			Description

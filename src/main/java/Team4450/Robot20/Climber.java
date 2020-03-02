@@ -36,6 +36,7 @@ public class Climber extends SubSystem
 	{
 		Util.consoleLog();
 
+		Devices.winchEncoder.reset();
 	}
 
 	@Override
@@ -53,6 +54,19 @@ public class Climber extends SubSystem
 		disable();
 		
 		INSTANCE = null;
+	}
+	
+	/**
+	 * Set power level for climber winch motors.
+	 * @param power -1 to +1, - is up because we pull the stick back to climb.
+	 */
+	public void set(double power)
+	{
+		// If trying to go down and switch returns , we are at bottom so kill the power.
+		
+		//if (power > 0 && Devices.winchSwitch.get()) power = 0;
+
+		Devices.winchDrive.set(power);
 	}
 
 	@Override

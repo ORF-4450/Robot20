@@ -115,8 +115,8 @@ class Teleop
 		
 		// Put subsystem objects into start up state.
 		Devices.gearBox.enable();
-//		Devices.climber.enable();
-//		Devices.pickup.enable();
+		Devices.climber.enable();
+		Devices.pickup.enable();
 //		Devices.shooter.enable();
 //		Devices.channel.enable();
 
@@ -125,6 +125,7 @@ class Teleop
 
 		// Driving loop runs until teleop is over.
 
+		// set color for testing, not here in actual match.
 		setTargetColor();
 		
 		Util.consoleLog("enter driving loop");
@@ -153,7 +154,8 @@ class Teleop
 					 Devices.LRCanTalon.get(), rightY, Devices.RRCanTalon.get(), rightX, utilY);
 			LCD.printLine(4, "yaw=%.2f, total=%.2f, rate=%.2f, hdng=%.2f", Devices.navx.getYaw(), 
 					Devices.navx.getTotalYaw(), Devices.navx.getYawRate(), Devices.navx.getHeading());
-			LCD.printLine(5, "color match=%b", colorMatch());
+			LCD.printLine(5, "color match=%b  winchSwitch=%b  winchEnc=%d", colorMatch(), Devices.winchSwitch.get(),
+					Devices.winchEncoder.get());
 			//LCD.printLine(7, "shooter rpm=%d", Devices.shooterEncoder.getRPM());
 			//LCD.printLine(6, "gyro angle=%f  center=%d  offset=%f", Devices.gyro.getAngle(), Devices.gyro.getCenter(), Devices.gyro.getOffset());
 
@@ -212,7 +214,9 @@ class Teleop
 					//Devices.robotDrive.curvatureDrive(rightY, rightX, rightStick.GetLatchedState(JoyStickButtonIDs.TRIGGER));
 			}
 
-			//Devices.shooterTalon.set(utilY);
+			// Control climb winch with utility stick, pull back is up.
+			
+			Devices.climber.set(utilY);
 			
 			if (firsttime) Util.consoleLog("after first loop");
 			
