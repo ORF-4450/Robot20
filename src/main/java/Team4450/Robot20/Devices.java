@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -27,6 +28,7 @@ public class Devices
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
 	  public static WPI_TalonSRX		shooterTalon;
+	  public static Talon				channelTalon;
 	  
 	  public static DifferentialDrive	robotDrive;
 	  
@@ -99,6 +101,8 @@ public class Devices
 	      
 	      shooterTalon.setInverted(true);
 	      shooterTalon.setNeutralMode(NeutralMode.Coast);
+	      
+	      channelTalon = new Talon(0);
 	      
 	      // For 2020 robot, put rear talons into a differential drive object and set the
 	      // front talons to follow the rears.

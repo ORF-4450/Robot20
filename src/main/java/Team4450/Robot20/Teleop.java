@@ -342,6 +342,12 @@ class Teleop
 					Devices.rightEncoder.reset();
 					break;
 					
+				case BUTTON_YELLOW:
+					if (Devices.channelTalon.get() == 0)
+						Devices.channelTalon.set(.70);
+					else
+						Devices.channelTalon.set(0);
+					
 				default:
 					break;
 			}
