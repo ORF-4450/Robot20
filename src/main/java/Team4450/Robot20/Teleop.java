@@ -97,7 +97,7 @@ class Teleop
 		Devices.leftStick.invertY(true);
 		Devices.rightStick.invertY(true);
 		
-		Devices.utilityStick.deadZoneY(.20);
+		Devices.utilityStick.deadZoneY(.10);
 
 		// 2018 post season testing showed Anakin liked this setting, smoothing driving.
 		Devices.SetCANTalonRampRate(0.5);
@@ -350,6 +350,20 @@ class Teleop
 					Devices.rightEncoder.reset();
 					break;
 					
+				case BUTTON_YELLOW:
+					if (Devices.pickup.isRunning())
+						Devices.pickup.stop();
+					else
+						Devices.pickup.start(.50);
+					break;
+					
+				case BUTTON_RED_RIGHT:
+					if (Devices.colorWheel.isRunning())
+						Devices.colorWheel.stop();
+					else
+						Devices.colorWheel.start(.50);
+					break;
+					
 				default:
 					break;
 			}
@@ -461,6 +475,12 @@ class Teleop
 			{
 				case TRIGGER:
 					break;
+					
+				case TOP_LEFT:
+					if (Devices.pickup.isExtended())
+						Devices.pickup.retract();
+					else
+						Devices.pickup.extend();
 					
 				default:
 					break;

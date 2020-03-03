@@ -30,9 +30,9 @@ public class Devices
 {
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon, shooterTalon;
+	  public static WPI_TalonSRX		pickupTalon, beltTalon;
 	  
-	  public static WPI_VictorSPX		pickupVictor, beltVictor, winchFrontVictor, winchBackVictor;
-	  public static WPI_VictorSPX		hookVictor, colorWheelVictor;
+	  public static WPI_VictorSPX		winchFrontVictor, winchBackVictor, hookVictor, colorWheelVictor;
 	  
 	  public static DifferentialDrive	robotDrive;
 	  
@@ -76,6 +76,7 @@ public class Devices
 	  public static Climber				climber;
 	  public static Pickup				pickup;
 	  public static Channel				channel;
+	  public static ColorWheel			colorWheel;
 	  
 	  // Private constructor prevents creation of any instances of this "static" class.
 	  
@@ -94,8 +95,8 @@ public class Devices
 		  RRCanTalon = new WPI_TalonSRX(4);	
 		  
 		  //shooterTalon = new WPI_TalonSRX(5);
-		  pickupVictor = new WPI_VictorSPX(6);
-		  beltVictor = new WPI_VictorSPX(7);
+		  pickupTalon = new WPI_TalonSRX(6);
+		  beltTalon = new WPI_TalonSRX(7);
 		  winchFrontVictor = new WPI_VictorSPX(8);
 		  winchBackVictor = new WPI_VictorSPX(9);
 		  hookVictor = new WPI_VictorSPX(10);
@@ -109,10 +110,8 @@ public class Devices
 	      InitializeCANTalon(RRCanTalon);
 	      
 //	      InitializeCANTalon(shooterTalon);
-//	      InitializeCANTalon(beltTalon);
-//	      InitializeCANTalon(winchFrontTalon);
-//	      InitializeCANTalon(winchBackTalon);
-//	      InitializeCANTalon(hookTalon);
+	      InitializeCANTalon(beltTalon);
+	      InitializeCANTalon(pickupTalon);
 
 	      // Configure CAN Talons with correct inversions.
 	      LFCanTalon.setInverted(true);
@@ -120,6 +119,8 @@ public class Devices
 		  
 		  RFCanTalon.setInverted(true);
 		  RRCanTalon.setInverted(true);
+		  
+		  pickupTalon.setInverted(true);
 
 	      // Turn on brake mode for drive CAN Talons.
 	      SetCANTalonBrakeMode(true);
@@ -129,7 +130,7 @@ public class Devices
 	      
 	      winchFrontVictor.setInverted(true);
 	      
-	      beltVictor.setNeutralMode(NeutralMode.Brake);
+	      beltTalon.setNeutralMode(NeutralMode.Brake);
 	      winchFrontVictor.setNeutralMode(NeutralMode.Brake);
 	      winchBackVictor.setNeutralMode(NeutralMode.Brake);
 	      hookVictor.setNeutralMode(NeutralMode.Brake);
@@ -170,6 +171,8 @@ public class Devices
 
  		  // Create utility stick with all buttons monitored and auto start.
  		  utilityStick = new JoyStick(new Joystick(2), "UtilityStick");
+ 		  utilityStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
+ 		  utilityStick.Start();
  		  
  		  // Create instances of the singleton subsystem classes.
  		  
@@ -179,6 +182,7 @@ public class Devices
  		  climber = Climber.getInstance(robot);
  		  pickup = Pickup.getInstance(robot);
  		  channel = Channel.getInstance(robot);
+ 		  colorWheel = ColorWheel.getInstance(robot);
  		  
  		  visionLL = VisionLL.getInstance(robot);
 	  }

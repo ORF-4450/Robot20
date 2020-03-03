@@ -3,22 +3,22 @@ package Team4450.Robot20;
 import Team4450.Lib.Util;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Channel extends SubSystem
+public class ColorWheel extends SubSystem
 {
 	private Robot			robot;
-	private boolean			beltRunning;
+	private boolean			wheelRunning;
 	
 	// This variable used to make this class is a singleton.
 	
-	private static Channel 	INSTANCE = null;
+	private static ColorWheel	INSTANCE = null;
 	
-	private Channel (Robot robot)
+	private ColorWheel (Robot robot)
 	{
 		Util.consoleLog();
 		
 		this.robot = robot;
 		
-		Util.consoleLog("Channel created!");
+		Util.consoleLog("ColorWheel created!");
 	}
 		
 	/**
@@ -26,9 +26,9 @@ public class Channel extends SubSystem
 	* this method.
 	* @return Reference to single shared instance of this class.
 	*/	
-	public static Channel getInstance(Robot robot)
+	public static ColorWheel getInstance(Robot robot)
 	{
-		if (INSTANCE == null) INSTANCE = new Channel(robot);
+		if (INSTANCE == null) INSTANCE = new ColorWheel(robot);
 		
 		return INSTANCE;		
 	}
@@ -64,16 +64,16 @@ public class Channel extends SubSystem
 	{
 		Util.consoleLog();
 
-		SmartDashboard.putBoolean("Belt", beltRunning);
+		SmartDashboard.putBoolean("Wheel", wheelRunning);
 	}
 
 	public void stop()
 	{
 		Util.consoleLog();
 		
-		Devices.beltTalon.stopMotor();
+		Devices.colorWheelVictor.stopMotor();
 		
-		beltRunning = false;
+		wheelRunning = false;
 		
 		updateDS();
 	}
@@ -82,16 +82,15 @@ public class Channel extends SubSystem
 	{
 		Util.consoleLog();
 		
-		Devices.beltTalon.set(power);
+		Devices.colorWheelVictor.set(power);
 		
-		beltRunning = true;
+		wheelRunning = true;
 		
 		updateDS();
 	}
 	
 	public boolean isRunning()
 	{
-		return beltRunning;
+		return wheelRunning;
 	}
 }
-
