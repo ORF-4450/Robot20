@@ -47,6 +47,7 @@ public class Devices
 
 	  public final static ValveDA		highLowValve = new ValveDA(0);			// For gearbox.
 	  public final static ValveDA		pickupValve = new ValveDA(2);			// For pickup arm.
+	  public final static ValveDA		climberBrake = new ValveDA(4);			// For climber brake.
 	  
 	  public static DigitalInput		winchSwitch = new DigitalInput(0);
 	  

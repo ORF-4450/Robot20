@@ -80,12 +80,16 @@ public class Pickup extends SubSystem
 		
 		extended = true;
 		
+		start(.50);
+		
 		updateDS();
 	}
 	
 	public void retract()
 	{
 		Util.consoleLog();
+		
+		stop();
 
 		Devices.pickupValve.SetB();
 		

@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot 
 {
-  static final String  	PROGRAM_NAME = "RAC20-03.01.20-01";
+  static final String  	PROGRAM_NAME = "RAC20-03.03.20-01";
 
   public Properties		robotProperties;
   
@@ -201,11 +201,12 @@ public class Robot extends SampleRobot
 
           // Disable subsystems.
           if (Devices.gearBox != null) Devices.gearBox.disable();
-//          if (Devices.climber != null) Devices.climber.disable();
-//          if (Devices.pickup != null) Devices.pickup.disable();
-//          if (Devices.shooter != null) Devices.shooter.disable();
-//          if (Devices.channel != null) Devices.channel.disable();
-
+          if (Devices.climber != null) Devices.climber.disable();
+          if (Devices.pickup != null) Devices.pickup.disable();
+          if (Devices.shooter != null) Devices.shooter.disable();
+          if (Devices.channel != null) Devices.channel.disable();
+          if (Devices.colorWheel != null) Devices.colorWheel.disable();
+          
 		  LCD.printLine(1, "Mode: Disabled");
 		  
 		  // Reset driver station LEDs.
@@ -220,6 +221,9 @@ public class Robot extends SampleRobot
 		  SmartDashboard.putNumber("AirPressure", 0);
 		  SmartDashboard.putBoolean("AltDriveMode", false);
 		  SmartDashboard.putBoolean("SteeringAssist", false);
+		  SmartDashboard.putBoolean("Brake", false);
+		  SmartDashboard.putBoolean("Pickup", false);
+		  SmartDashboard.putBoolean("Pickup Extended", false);
 
 		  Util.consoleLog("end");
 	  }

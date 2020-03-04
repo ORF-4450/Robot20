@@ -97,7 +97,7 @@ class Teleop
 		Devices.leftStick.invertY(true);
 		Devices.rightStick.invertY(true);
 		
-		Devices.utilityStick.deadZoneY(.10);
+		Devices.utilityStick.deadZoneY(.15);
 
 		// 2018 post season testing showed Anakin liked this setting, smoothing driving.
 		Devices.SetCANTalonRampRate(0.5);
@@ -214,9 +214,9 @@ class Teleop
 					//Devices.robotDrive.curvatureDrive(rightY, rightX, rightStick.GetLatchedState(JoyStickButtonIDs.TRIGGER));
 			}
 
-			// Control climb winch with utility stick, pull back is up.
+			// Control climb winch with utility stick, pull back is up (-).
 			
-			Devices.climber.set(utilY);
+			Devices.climber.set(Util.squareInput(utilY));
 			
 			if (firsttime) Util.consoleLog("after first loop");
 			
@@ -350,18 +350,20 @@ class Teleop
 					Devices.rightEncoder.reset();
 					break;
 					
-				case BUTTON_YELLOW:
-					if (Devices.pickup.isRunning())
-						Devices.pickup.stop();
-					else
-						Devices.pickup.start(.50);
-					break;
-					
-				case BUTTON_RED_RIGHT:
+				case BUTTON_BLUE_RIGHT:
 					if (Devices.colorWheel.isRunning())
 						Devices.colorWheel.stop();
 					else
-						Devices.colorWheel.start(.50);
+						Devices.colorWheel.start(.25);
+					
+					break;
+					
+				case BUTTON_RED_RIGHT:
+					if (Devices.climber.isBrakeEngaged())
+						Devices.climber.releaseBrake();
+					else
+						Devices.climber.engageBrake();
+					
 					break;
 					
 				default:
@@ -476,11 +478,31 @@ class Teleop
 				case TRIGGER:
 					break;
 					
+				// Move ball toward shooter.
 				case TOP_LEFT:
+					if (Devices.channel.isRunning())
+						Devices.channel.stop();
+					else
+						Devices.channel.start(.70);
+					
+					break;
+					
+				// Move ball backwards toward pickup.
+				case TOP_RIGHT:
+					if (Devices.channel.isRunning())
+						Devices.channel.stop();
+					else
+						Devices.channel.start(-.70);
+					
+					break;
+					
+				case TOP_MIDDLE:
 					if (Devices.pickup.isExtended())
 						Devices.pickup.retract();
 					else
 						Devices.pickup.extend();
+					
+					break;
 					
 				default:
 					break;

@@ -28,6 +28,8 @@ Port	Device blk-pos	Description
 1		ValveDA	0		B side high/low speed shifter. Set High speed.
 2		ValveDA 1		A side is extend pickup.
 3		ValveDA 1		B side is retract pickup.
+4		ValveDA	2		A side is engage climber brake.
+5		ValveDA	2		B side is release climber brake.
 
 
 PCM 1 Ports
@@ -99,4 +101,5 @@ Pickup					boolean			True when pickup motor is running.
 PickupExtended			boolean			True when pickup is extended.
 Shooter					boolean			True when shooter motor is running.
 Belt					boolean			True when channel belt motor is running.
+Brake					boolean			True when climber brake is engaged.
 		  
