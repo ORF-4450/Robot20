@@ -223,7 +223,9 @@ public class Robot extends SampleRobot
 		  SmartDashboard.putBoolean("SteeringAssist", false);
 		  SmartDashboard.putBoolean("Brake", false);
 		  SmartDashboard.putBoolean("Pickup", false);
-		  SmartDashboard.putBoolean("Pickup Extended", false);
+		  SmartDashboard.putBoolean("PickupExtended", false);
+		  SmartDashboard.putBoolean("CountingTurns", false);
+		  SmartDashboard.putBoolean("RotatingToTarget", false);
 
 		  Util.consoleLog("end");
 	  }

@@ -69,7 +69,7 @@ public class Pickup extends SubSystem
 		Util.consoleLog();
 
 		SmartDashboard.putBoolean("Pickup", pickupRunning);
-		SmartDashboard.putBoolean("Pickup Extended", extended);
+		SmartDashboard.putBoolean("PickupExtended", extended);
 	}
 	
 	public void extend()

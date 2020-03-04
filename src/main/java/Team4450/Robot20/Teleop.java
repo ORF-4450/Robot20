@@ -23,8 +23,6 @@ class Teleop
 {
 	private final Robot 		robot;
 	private boolean				autoTarget, altDriveMode;
-	
-  	RevColorSensor				colorSensor = RevColorSensor.getInstance();
 
 	// This variable used to make this class is a singleton.
 	
@@ -125,9 +123,6 @@ class Teleop
 
 		// Driving loop runs until teleop is over.
 
-		// set color for testing, not here in actual match.
-		setTargetColor();
-		
 		Util.consoleLog("enter driving loop");
 
 		while (robot.isEnabled())	// && robot.isOperatorControl())
@@ -154,7 +149,7 @@ class Teleop
 					 Devices.LRCanTalon.get(), rightY, Devices.RRCanTalon.get(), rightX, utilY);
 			LCD.printLine(4, "yaw=%.2f, total=%.2f, rate=%.2f, hdng=%.2f", Devices.navx.getYaw(), 
 					Devices.navx.getTotalYaw(), Devices.navx.getYawRate(), Devices.navx.getHeading());
-			LCD.printLine(5, "color match=%b  winchSwitch=%b  winchEnc=%d", colorMatch(), Devices.winchSwitch.get(),
+			LCD.printLine(5, "winchSwitch=%b  winchEnc=%d", Devices.winchSwitch.get(),
 					Devices.winchEncoder.get());
 			//LCD.printLine(7, "shooter rpm=%d", Devices.shooterEncoder.getRPM());
 			//LCD.printLine(6, "gyro angle=%f  center=%d  offset=%f", Devices.gyro.getAngle(), Devices.gyro.getCenter(), Devices.gyro.getOffset());
@@ -265,73 +260,6 @@ class Teleop
 
 		return joystickValue;
 	}
-	
-	// Reads game data and if color code present, loads the correct Color
-	// object into the Color Sensor matching function.
-	
-	private void setTargetColor()
-	{
-		Color	targetColor = null;
-		String 	gameData = DriverStation.getInstance().getGameSpecificMessage();
-		
-		gameData = "R";
-		
-		Util.consoleLog(gameData);
-		
-		if(gameData.length() > 0)
-		{
-			switch (gameData.charAt(0))
-			{
-				case 'B' :
-					//Blue code.
-					targetColor = RevColorSensor.getMatchColor(0.143, 0.427, 0.429);
-					break;
-					
-				case 'G' :
-					//Green code.
-					targetColor = RevColorSensor.getMatchColor(0.197, 0.561, 0.240);
-					break;
-					
-				case 'R' :
-					//Red code.
-					targetColor = RevColorSensor.getMatchColor(0.561, 0.232, 0.114);
-					break;
-					
-				case 'Y' :
-					//Yellow code.
-					targetColor = RevColorSensor.getMatchColor(0.361, 0.524, 0.113);
-					break;
-					
-				default :
-					//This is corrupt data.
-					break;
-		  }
-		} else {
-			// no data received yet default to red.
-			targetColor = RevColorSensor.getMatchColor(0.561, 0.232, 0.114);
-		}		
-		
-		if (targetColor != null) colorSensor.addColorMatch(targetColor);
-	}
-	
-	// Match current color read from sensor to the target color in the color matcher
-	// and returns true if current color matches target color with confidence
-	// >= 85%.
-	
-	private boolean colorMatch()
-	{
-		Color color = colorSensor.getColor();
-
-		ColorMatchResult matchResult = colorSensor.matchClosestColor(color);
-
-		//LCD.printLine(6, "color match result r=%f g=%f b=%f  conf=%f", matchResult.color.red, matchResult.color.green,
-		//		matchResult.color.blue, matchResult.confidence);
-
-		if (matchResult.confidence >= .85)
-			return true;
-		else
-			return false;
-	}
 
 	// Handle LaunchPad control events.
 
@@ -350,11 +278,21 @@ class Teleop
 					Devices.rightEncoder.reset();
 					break;
 					
+				// Start color wheel for counted turns.
 				case BUTTON_BLUE_RIGHT:
 					if (Devices.colorWheel.isRunning())
-						Devices.colorWheel.stop();
+						Devices.colorWheel.stopWheel();
 					else
-						Devices.colorWheel.start(.25);
+						Devices.colorWheel.startWheel(.25, false);
+					
+					break;
+					
+				// Start color wheel for game color.
+				case BUTTON_YELLOW:
+					if (Devices.colorWheel.isRunning())
+						Devices.colorWheel.stopWheel();
+					else
+						Devices.colorWheel.startWheel(.25, true);
 					
 					break;
 					
