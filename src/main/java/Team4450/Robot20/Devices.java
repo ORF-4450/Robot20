@@ -173,6 +173,8 @@ public class Devices
  		  // Create utility stick with all buttons monitored and auto start.
  		  utilityStick = new JoyStick(new Joystick(2), "UtilityStick");
  		  utilityStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
+ 		  utilityStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
+ 		  utilityStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
  		  utilityStick.Start();
  		  
  		  // Create instances of the singleton subsystem classes.
