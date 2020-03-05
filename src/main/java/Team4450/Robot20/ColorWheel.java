@@ -92,14 +92,25 @@ public class ColorWheel extends SubSystem
 		updateDS();
 	}
 	
-	public void startWheel(double power, boolean gameColor)
+	public void startWheel(double power)
 	{
 		Util.consoleLog();
 		
-		//if (gameColor)
-		//	startRotateToTarget();
-		//else
-		//startCountingTurns();
+		Devices.colorWheelVictor.set(power);
+		
+		wheelRunning = true;
+		
+		updateDS();
+	}
+
+	public void startWheel(double power, boolean gameColor)
+	{
+		Util.consoleLog("%s", gameColor);
+		
+		if (gameColor)
+			startRotateToTarget();
+		else
+			startCountingTurns();
 		
 		Devices.colorWheelVictor.set(power);
 		
@@ -124,17 +135,49 @@ public class ColorWheel extends SubSystem
 		if (targetColor != null) colorSensor.addColorMatch(targetColor);
 	}
 	
+	public static String convertGameColor(String gameColor)
+	{
+		String color;
+		
+		switch (gameColor.charAt(0))
+		{
+			case 'B' :
+				color = "BLUE";
+				break;
+				
+			case 'G' :
+				color = "GREEN";
+				break;
+				
+			case 'R' :
+				color = "RED";
+				break;
+				
+			case 'Y' :
+				color = "YELLOW";
+				break;
+				
+			default :
+				color = "";
+				break;
+	  }
+
+		return color;
+	}
+	
 	// Reads game data and if color code present, loads the correct Color
 	// object into the Color Sensor matching function.
 	
 	public void setGameTargetColor()
 	{
 		Color	targetColor = null;
-		String 	gameData = DriverStation.getInstance().getGameSpecificMessage();
+		String 	gameData = DriverStation.getInstance().getGameSpecificMessage(), color = "";
 		
 		gameData = "R";
 		
 		Util.consoleLog(gameData);
+		
+		color = convertGameColor(gameData);
 		
 		colorSensor.resetColorMatcher();
 
@@ -143,23 +186,27 @@ public class ColorWheel extends SubSystem
 			switch (gameData.charAt(0))
 			{
 				case 'B' :
-					//Blue code.
-					targetColor = RevColorSensor.getMatchColor(0.143, 0.427, 0.429);
+					//Blue code. Match color is Red.
+					targetColor = RevColorSensor.getMatchColor(0.561, 0.232, 0.114);	// Red
+					//targetColor = RevColorSensor.getMatchColor(0.143, 0.427, 0.429);	// Blue
 					break;
 					
 				case 'G' :
-					//Green code.
-					targetColor = RevColorSensor.getMatchColor(0.197, 0.561, 0.240);
+					//Green code. Match color is Yellow.
+					targetColor = RevColorSensor.getMatchColor(0.361, 0.524, 0.113);	// Yellow
+					//targetColor = RevColorSensor.getMatchColor(0.197, 0.561, 0.240);	// Green
 					break;
 					
 				case 'R' :
-					//Red code.
-					targetColor = RevColorSensor.getMatchColor(0.561, 0.232, 0.114);
+					//Red code. Match color is Blue.
+					targetColor = RevColorSensor.getMatchColor(0.143, 0.427, 0.429);	// Blue
+					//targetColor = RevColorSensor.getMatchColor(0.561, 0.232, 0.114);	// Red
 					break;
 					
 				case 'Y' :
-					//Yellow code.
-					targetColor = RevColorSensor.getMatchColor(0.361, 0.524, 0.113);
+					//Yellow code. Match color is Green.			
+					targetColor = RevColorSensor.getMatchColor(0.197, 0.561, 0.240);	// Green
+					//targetColor = RevColorSensor.getMatchColor(0.361, 0.524, 0.113);	// Yellow
 					break;
 					
 				default :
@@ -167,10 +214,11 @@ public class ColorWheel extends SubSystem
 					break;
 		  }
 		} else {
-			// no data received yet default to red.
-			//targetColor = RevColorSensor.getMatchColor(0.561, 0.232, 0.114);
+			// no data received yet no match.
 		}		
-		
+
+		SmartDashboard.putString("GameColor", color);
+
 		if (targetColor != null) colorSensor.addColorMatch(targetColor);
 	}
 	
@@ -255,7 +303,9 @@ public class ColorWheel extends SubSystem
     	    			}
     	    		} else onTargetColor = false;
     	    		
-    	    		if (turnCount > 3) 
+    	    		// Count 6 since each color appears twice on wheel.
+    	    		
+    	    		if (turnCount > 6) 
     	    		{
     	    			Devices.colorWheelVictor.stopMotor();
     	    			wheelRunning = false;
@@ -279,20 +329,20 @@ public class ColorWheel extends SubSystem
 	{
 		Util.consoleLog();
 		
-		if (countTurnsThread != null) return;
+		if (rotateToTargetThread != null) return;
 
-		countTurnsThread = new CountTurns();
+		rotateToTargetThread = new RotateToTarget();
 		
-		countTurnsThread.start();
+		rotateToTargetThread.start();
 	}
 	
 	private void stopRotateToTarget()
 	{
 		Util.consoleLog();
 
-		if (countTurnsThread != null) countTurnsThread.interrupt();
+		if (rotateToTargetThread != null) rotateToTargetThread.interrupt();
 		
-		countTurnsThread = null;
+		rotateToTargetThread = null;
 	}
 	
 	private class RotateToTarget extends Thread

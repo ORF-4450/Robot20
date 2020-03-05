@@ -177,11 +177,13 @@ public class Devices
  		  utilityStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
  		  utilityStick.Start();
  		  
+ 		  utilityStick.invertX(true);
+ 		  
  		  // Create instances of the singleton subsystem classes.
  		  
  		  gearBox = GearBox.getInstance(robot);
  		  
- 		  shooter = Shooter.getInstance(robot);
+ 		  //shooter = Shooter.getInstance(robot);
  		  climber = Climber.getInstance(robot);
  		  pickup = Pickup.getInstance(robot);
  		  channel = Channel.getInstance(robot);

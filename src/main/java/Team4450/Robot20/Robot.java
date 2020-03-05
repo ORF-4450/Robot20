@@ -226,6 +226,7 @@ public class Robot extends SampleRobot
 		  SmartDashboard.putBoolean("PickupExtended", false);
 		  SmartDashboard.putBoolean("CountingTurns", false);
 		  SmartDashboard.putBoolean("RotatingToTarget", false);
+		  SmartDashboard.putString("GameColor", "");
 
 		  Util.consoleLog("end");
 	  }

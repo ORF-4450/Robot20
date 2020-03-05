@@ -104,4 +104,5 @@ Belt					boolean			True when channel belt motor is running.
 Brake					boolean			True when climber brake is engaged.
 CountingTurns			boolean			True when color wheel is running and counting turns.
 RotatingToTarget		boolean			True when color wheel is running and rotating to target color.
+GameColor				string			Shows game color when sent from FMS.
 		  

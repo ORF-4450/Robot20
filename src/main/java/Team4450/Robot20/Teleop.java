@@ -73,6 +73,7 @@ class Teleop
 		double	gain = .05;
 		boolean	steeringAssistMode = false;
 		boolean firsttime = true;
+		String	gameData = "";
 		int		angle;
 
 		// Motor safety turned off during initialization.
@@ -96,6 +97,7 @@ class Teleop
 		Devices.rightStick.invertY(true);
 		
 		Devices.utilityStick.deadZoneY(.15);
+		Devices.utilityStick.deadZoneX(.15);
 
 		// 2018 post season testing showed Anakin liked this setting, smoothing driving.
 		Devices.SetCANTalonRampRate(0.5);
@@ -143,10 +145,11 @@ class Teleop
 			leftX = Devices.leftStick.GetX();	// left/right
 
 			utilY = Devices.utilityStick.GetY();
+			utilX = Devices.utilityStick.GetX();
 			
 			LCD.printLine(2, "leftenc=%d  rightenc=%d", Devices.leftEncoder.get(), Devices.rightEncoder.get());			
-			LCD.printLine(3, "leftY=%.3f (%.3f)  rightY=%.3f (%.3f)  -  rightX=%.3f  utilY=%.3f", leftY, 
-					 Devices.LRCanTalon.get(), rightY, Devices.RRCanTalon.get(), rightX, utilY);
+			LCD.printLine(3, "leftY=%.3f (%.3f)  rightY=%.3f (%.3f)  -  rightX=%.3f  utilY=%.3f  utilX=%.3f", leftY, 
+					 Devices.LRCanTalon.get(), rightY, Devices.RRCanTalon.get(), rightX, utilY, utilX);
 			LCD.printLine(4, "yaw=%.2f, total=%.2f, rate=%.2f, hdng=%.2f", Devices.navx.getYaw(), 
 					Devices.navx.getTotalYaw(), Devices.navx.getYawRate(), Devices.navx.getHeading());
 			LCD.printLine(5, "winchSwitch=%b  winchEnc=%d", Devices.winchSwitch.get(),
@@ -213,6 +216,8 @@ class Teleop
 			
 			Devices.climber.set(Util.squareInput(utilY));
 			
+			Devices.hookVictor.set(utilX);
+			
 			if (firsttime) Util.consoleLog("after first loop");
 			
 			firsttime = false;
@@ -221,6 +226,13 @@ class Teleop
 			
 			SmartDashboard.updateValues();
 			
+			// Update game color on DS.
+
+			gameData = DriverStation.getInstance().getGameSpecificMessage();
+			
+			if (gameData != null) SmartDashboard.putString("GameColor", ColorWheel.convertGameColor(gameData));
+
+
 			// End of driving loop.
 
 			Timer.delay(.020);	// wait 20ms for update from driver station.
@@ -278,12 +290,21 @@ class Teleop
 					Devices.rightEncoder.reset();
 					break;
 					
+				// Start color wheel for manual operration.
+				case BUTTON_BLUE:
+					if (Devices.colorWheel.isRunning())
+						Devices.colorWheel.stopWheel();
+					else
+						Devices.colorWheel.startWheel(.25);
+					
+					break;
+					
 				// Start color wheel for counted turns.
 				case BUTTON_BLUE_RIGHT:
 					if (Devices.colorWheel.isRunning())
 						Devices.colorWheel.stopWheel();
 					else
-						Devices.colorWheel.startWheel(.25, false);
+						Devices.colorWheel.startWheel(.25, true);
 					
 					break;
 					
