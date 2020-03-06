@@ -137,7 +137,11 @@ public class ColorWheel extends SubSystem
 	
 	public static String convertGameColor(String gameColor)
 	{
-		String color;
+		String color = "";
+		
+		if (gameColor == null) return color;
+		
+		if (gameColor.length() == 0) return color;
 		
 		switch (gameColor.charAt(0))
 		{

@@ -50,6 +50,7 @@ public class Devices
 	  public final static ValveDA		climberBrake = new ValveDA(4);			// For climber brake.
 	  
 	  public static DigitalInput		winchSwitch = new DigitalInput(0);
+	  public static DigitalInput		ballEye = new DigitalInput(3);
 	  
 	  public final static AnalogInput	pressureSensor = new AnalogInput(0);
 	  

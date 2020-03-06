@@ -96,8 +96,8 @@ class Teleop
 		Devices.leftStick.invertY(true);
 		Devices.rightStick.invertY(true);
 		
-		Devices.utilityStick.deadZoneY(.15);
-		Devices.utilityStick.deadZoneX(.15);
+		Devices.utilityStick.deadZoneY(.25);
+		Devices.utilityStick.deadZoneX(.25);
 
 		// 2018 post season testing showed Anakin liked this setting, smoothing driving.
 		Devices.SetCANTalonRampRate(0.5);
@@ -152,8 +152,8 @@ class Teleop
 					 Devices.LRCanTalon.get(), rightY, Devices.RRCanTalon.get(), rightX, utilY, utilX);
 			LCD.printLine(4, "yaw=%.2f, total=%.2f, rate=%.2f, hdng=%.2f", Devices.navx.getYaw(), 
 					Devices.navx.getTotalYaw(), Devices.navx.getYawRate(), Devices.navx.getHeading());
-			LCD.printLine(5, "winchSwitch=%b  winchEnc=%d", Devices.winchSwitch.get(),
-					Devices.winchEncoder.get());
+			LCD.printLine(5, "winchSwitch=%b  winchEnc=%d  ballEye=%b", Devices.winchSwitch.get(),
+					Devices.winchEncoder.get(), !Devices.ballEye.get());
 			//LCD.printLine(7, "shooter rpm=%d", Devices.shooterEncoder.getRPM());
 			//LCD.printLine(6, "gyro angle=%f  center=%d  offset=%f", Devices.gyro.getAngle(), Devices.gyro.getCenter(), Devices.gyro.getOffset());
 
@@ -228,7 +228,7 @@ class Teleop
 			
 			// Update game color on DS.
 
-			gameData = DriverStation.getInstance().getGameSpecificMessage();
+			gameData = "R" ; //DriverStation.getInstance().getGameSpecificMessage();
 			
 			if (gameData != null) SmartDashboard.putString("GameColor", ColorWheel.convertGameColor(gameData));
 
@@ -290,7 +290,7 @@ class Teleop
 					Devices.rightEncoder.reset();
 					break;
 					
-				// Start color wheel for manual operration.
+				// Start color wheel for manual operation.
 				case BUTTON_BLUE:
 					if (Devices.colorWheel.isRunning())
 						Devices.colorWheel.stopWheel();
@@ -304,7 +304,7 @@ class Teleop
 					if (Devices.colorWheel.isRunning())
 						Devices.colorWheel.stopWheel();
 					else
-						Devices.colorWheel.startWheel(.25, true);
+						Devices.colorWheel.startWheel(.25, false);
 					
 					break;
 					
@@ -455,12 +455,16 @@ class Teleop
 					
 					break;
 					
-				case TOP_MIDDLE:
+				case TOP_BACK:
 					if (Devices.pickup.isExtended())
 						Devices.pickup.retract();
 					else
 						Devices.pickup.extend();
 					
+					break;
+					
+				// Shooter motor toggle.
+				case TOP_MIDDLE:
 					break;
 					
 				default:
