@@ -307,7 +307,7 @@ public class ColorWheel extends SubSystem
     	    			}
     	    		} else onTargetColor = false;
     	    		
-    	    		// Count 6 since each color appears twice on wheel.
+    	    		// Count 6 color changes since each color appears twice on wheel.
     	    		
     	    		if (turnCount > 6) 
     	    		{
@@ -316,7 +316,7 @@ public class ColorWheel extends SubSystem
     	    			break;
     	    		}
     	    		
-    	    		sleep(250);
+    	    		sleep(100);
     	    	}
 	    	}
 	    	catch (InterruptedException e) { }
@@ -379,7 +379,7 @@ public class ColorWheel extends SubSystem
     	    			break;
     	    		}
     	    		
-    	    		sleep(250);
+    	    		sleep(50);
     	    	}
 	    	}
 	    	catch (InterruptedException e) { }

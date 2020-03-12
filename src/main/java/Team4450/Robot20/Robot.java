@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot 
 {
-  static final String  	PROGRAM_NAME = "RAC20-03.05.20-01";
+  static final String  	PROGRAM_NAME = "RAC20-03.12.20-01";
 
   public Properties		robotProperties;
   
@@ -113,7 +113,7 @@ public class Robot extends SampleRobot
    		
 		SmartDashboard.putString("Program", PROGRAM_NAME);
    		
-   		SmartDashboard.putData(SendableVersion.INSTANCE);
+   		SmartDashboard.putData("Version", SendableVersion.INSTANCE);
    		
    		// Set compressor enabled switch on dashboard from properties file.
    		// Later code will read that setting from the dashboard and turn 

@@ -1,13 +1,15 @@
 package Team4450.Robot20;
 
 import Team4450.Lib.Util;
+import edu.wpi.first.wpilibj.InterruptHandlerFunction;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Pickup extends SubSystem
 {
 	private Robot		robot;
-	private boolean		extended = false, pickupRunning = false;
-	
+	private boolean		extended = false, pickupRunning = false, ballDetection = false;
+	private Thread		ballDetectorThread;
+
 	// This variable used to make this class is a singleton.
 	
 	private static Pickup 	INSTANCE = null;
@@ -18,6 +20,21 @@ public class Pickup extends SubSystem
 		
 		this.robot = robot;
 		
+		// Configure interrupt handler for the ballEye optical ball detector.
+		
+		Devices.ballEye.requestInterrupts(new InterruptHandlerFunction<Object>() 
+		{
+
+		     @Override
+		     public void interruptFired(int interruptAssertedMask, Object param) 
+		     {
+		    	 Util.consoleLog("ball  interrupt");
+		     }
+		});
+		
+		// Listen for a falling edge
+		Devices.ballEye.setUpSourceEdge(false, true);
+
 		Util.consoleLog("Pickup created!");
 	}
 		
@@ -106,6 +123,8 @@ public class Pickup extends SubSystem
 		
 		pickupRunning = true;
 		
+		startBallDetector();
+		
 		updateDS();
 	}
 
@@ -116,6 +135,8 @@ public class Pickup extends SubSystem
 		Devices.pickupTalon.stopMotor();
 	
 		pickupRunning = false;
+		
+		stopBallDetector();
 	
 		updateDS();
 	}
@@ -129,5 +150,79 @@ public class Pickup extends SubSystem
 	{
 		return pickupRunning;
 	}
+	
+	public void startBallDetector()
+	{
+		Util.consoleLog();
+		
+		if (ballDetectorThread != null) return;
 
+		ballDetectorThread = new BallDetector();
+		
+		ballDetectorThread.start();
+	}
+	
+	private void stopBallDetector()
+	{
+		Util.consoleLog();
+
+		if (ballDetectorThread != null) ballDetectorThread.interrupt();
+		
+		ballDetectorThread = null;
+	}
+	
+	private class BallDetector extends Thread
+	{
+		BallDetector()
+		{
+			Util.consoleLog();
+			
+			this.setName("BallDetector");
+	    }
+		
+	    public void run()
+	    {
+	    	Util.consoleLog();	
+
+	    	ballDetection = true;
+
+	    	updateDS();
+	    	
+	    	try
+	    	{
+    	    	while (!isInterrupted() && robot.isEnabled())
+    	    	{
+    	    		if (!Devices.ballEye.get()) Util.consoleLog("ball detected");
+    	    		sleep(10);
+    	    	}
+	    	}
+	    	catch (InterruptedException e) { }
+	    	catch (Throwable e) { e.printStackTrace(Util.logPrintStream); }
+
+	    	ballDetection = false;
+	    	ballDetectorThread = null;
+	    	
+	    	updateDS();
+	    }
+	}
+	
+	public void enableBalldetector()
+	{
+		Util.consoleLog();
+		
+		Devices.ballEye.requestInterrupts(new InterruptHandlerFunction<Object>() 
+		{
+
+		     @Override
+		     public void interruptFired(int interruptAssertedMask, Object param) 
+		     {
+		    	 Util.consoleLog("ball  interrupt");
+		     }
+		});
+		
+		// Listen for a falling edge
+		Devices.ballEye.setUpSourceEdge(false, true);
+		// Enable digital interrupt pin
+		Devices.ballEye.enableInterrupts();
+	}
 }

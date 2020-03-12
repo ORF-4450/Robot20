@@ -76,8 +76,9 @@ public class Autonomous
 	public enum AutoProgram
 	{
 		NoProgram,
-		TestPathFinder,
-		AutoTest
+		DriveAndStop
+		//TestPathFinder,
+		//AutoTest
 	}
 	
 	// Configure SendableChooser with auto program choices and
@@ -93,8 +94,9 @@ public class Autonomous
 		
 		autoChooser.setName("Auto Program");
 		autoChooser.setDefaultOption("No Program (teleop)", AutoProgram.NoProgram);
-		autoChooser.addOption("PathFinder Test", AutoProgram.TestPathFinder);		
-		autoChooser.addOption("auto Test", AutoProgram.AutoTest);		
+		autoChooser.addOption("Drive And Stop", AutoProgram.DriveAndStop);		
+		//autoChooser.addOption("PathFinder Test", AutoProgram.TestPathFinder);		
+		//autoChooser.addOption("auto Test", AutoProgram.AutoTest);		
 				
 		SmartDashboard.putData(autoChooser);
 	}
@@ -133,7 +135,7 @@ public class Autonomous
 		Devices.navx.resetYaw();
 
 		// Reset field location tracking.
-		Devices.navx.getAHRS().resetDisplacement();
+		//Devices.navx.getAHRS().resetDisplacement();
 		
 		// Set heading to initial angle (0 is robot pointed down the field) so
 		// NavX class can track which way the robot is pointed during the match.
@@ -151,13 +153,17 @@ public class Autonomous
 			case NoProgram:		// No auto program.
 				break;
 
-			case TestPathFinder:
-					//testPathfinder();
+			case DriveAndStop:
+				autoDrive(.50, 2000, StopMotors.stop, Brakes.on, Pid.off, Heading.angle);
 				break;
 				
-			case AutoTest:
-				autoTest();
-				break;
+//			case TestPathFinder:
+//					//testPathfinder();
+//				break;
+//				
+//			case AutoTest:
+//				autoTest();
+//				break;
 
 			default:
 				break;
@@ -306,7 +312,7 @@ public class Autonomous
 	 * with or without brakes on CAN bus drive system. Uses NavX yaw to drive straight.
 	 * @param power Power applied, + is forward.
 	 * @param encoderCounts Target encoder counts to move, always +.
-	 * @param stop Stop stops motors at end of curve, dontStop leaves power on to flow into next move.
+	 * @param stop Stop stops motors at end of move, dontStop leaves power on to flow into next move.
 	 * @param brakes Brakes on or off.
 	 * @param pid On is use PID to control movement, off is simple drive.
 	 * @param heading Heading is measure steering yaw from last set navx target heading, angle is measure yaw

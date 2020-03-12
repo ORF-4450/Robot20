@@ -206,7 +206,7 @@ class Teleop
 					SmartDashboard.putBoolean("SteeringAssist", steeringAssistMode);
 				}
 				else
-					Devices.robotDrive.tankDrive(leftY, rightY);		// Normal tank drive.
+					Devices.robotDrive.tankDrive(leftY, rightY, true);		// Normal tank drive.
 				
 					// This shows how to use curvature drive mode, toggled by trigger (for testing).
 					//Devices.robotDrive.curvatureDrive(rightY, rightX, rightStick.GetLatchedState(JoyStickButtonIDs.TRIGGER));
@@ -323,6 +323,11 @@ class Teleop
 					else
 						Devices.climber.engageBrake();
 					
+					break;
+					
+				case BUTTON_BLACK:
+					//Devices.pickup.startBallDetector();
+					Devices.pickup.enableBalldetector();
 					break;
 					
 				default:
