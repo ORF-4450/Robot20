@@ -327,7 +327,8 @@ class Teleop
 					
 				case BUTTON_BLACK:
 					//Devices.pickup.startBallDetector();
-					Devices.pickup.enableBalldetector();
+					//Devices.pickup.enableBalldetector();
+					Devices.ballEye.enableInterrupts();
 					break;
 					
 				default:

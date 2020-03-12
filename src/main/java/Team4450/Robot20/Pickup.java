@@ -22,17 +22,10 @@ public class Pickup extends SubSystem
 		
 		// Configure interrupt handler for the ballEye optical ball detector.
 		
-		Devices.ballEye.requestInterrupts(new InterruptHandlerFunction<Object>() 
-		{
-
-		     @Override
-		     public void interruptFired(int interruptAssertedMask, Object param) 
-		     {
-		    	 Util.consoleLog("ball  interrupt");
-		     }
-		});
+		Devices.ballEye.requestInterrupts(new InterruptHandler());
 		
-		// Listen for a falling edge
+		// Listen for a falling edge interrupt.
+		
 		Devices.ballEye.setUpSourceEdge(false, true);
 
 		Util.consoleLog("Pickup created!");
@@ -123,7 +116,7 @@ public class Pickup extends SubSystem
 		
 		pickupRunning = true;
 		
-		startBallDetector();
+		Devices.ballEye.enableInterrupts();
 		
 		updateDS();
 	}
@@ -136,7 +129,7 @@ public class Pickup extends SubSystem
 	
 		pickupRunning = false;
 		
-		stopBallDetector();
+		Devices.ballEye.disableInterrupts();
 	
 		updateDS();
 	}
@@ -150,79 +143,18 @@ public class Pickup extends SubSystem
 	{
 		return pickupRunning;
 	}
-	
-	public void startBallDetector()
+		
+	// Interrupt handler object to handle detection of ball by the ball Eye
+	// optical sensor. The sensor generates a hardware interrupt when the 
+	// eye is triggered and the fired method is called when interrupt occurs.
+	// Keep the length of the code in that method short as no new interrupts
+	// will be reported until fired method ends.
+	private class InterruptHandler extends InterruptHandlerFunction 
 	{
-		Util.consoleLog();
-		
-		if (ballDetectorThread != null) return;
-
-		ballDetectorThread = new BallDetector();
-		
-		ballDetectorThread.start();
-	}
-	
-	private void stopBallDetector()
-	{
-		Util.consoleLog();
-
-		if (ballDetectorThread != null) ballDetectorThread.interrupt();
-		
-		ballDetectorThread = null;
-	}
-	
-	private class BallDetector extends Thread
-	{
-		BallDetector()
-		{
-			Util.consoleLog();
-			
-			this.setName("BallDetector");
-	    }
-		
-	    public void run()
-	    {
-	    	Util.consoleLog();	
-
-	    	ballDetection = true;
-
-	    	updateDS();
-	    	
-	    	try
-	    	{
-    	    	while (!isInterrupted() && robot.isEnabled())
-    	    	{
-    	    		if (!Devices.ballEye.get()) Util.consoleLog("ball detected");
-    	    		sleep(10);
-    	    	}
-	    	}
-	    	catch (InterruptedException e) { }
-	    	catch (Throwable e) { e.printStackTrace(Util.logPrintStream); }
-
-	    	ballDetection = false;
-	    	ballDetectorThread = null;
-	    	
-	    	updateDS();
-	    }
-	}
-	
-	public void enableBalldetector()
-	{
-		Util.consoleLog();
-		
-		Devices.ballEye.requestInterrupts(new InterruptHandlerFunction<Object>() 
-		{
-
-		     @Override
-		     public void interruptFired(int interruptAssertedMask, Object param) 
-		     {
-		    	 Util.consoleLog("ball  interrupt");
-		     }
-		});
-		
-		// Listen for a falling edge
-		Devices.ballEye.setUpSourceEdge(false, true);
-		// Enable digital interrupt pin
-		Devices.ballEye.enableInterrupts();
+	     @Override
+	     public void interruptFired(int interruptAssertedMask, Object param) 
+	     {
+	    	 Util.consoleLog("ball  interrupt 2");
+	     }
 	}
 }
