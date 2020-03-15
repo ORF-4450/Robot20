@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -75,6 +76,7 @@ class Teleop
 		boolean firsttime = true;
 		String	gameData = "";
 		int		angle;
+		Pose2d	pose = Devices.odometer.getPose();
 
 		// Motor safety turned off during initialization.
 
@@ -154,6 +156,8 @@ class Teleop
 					Devices.navx.getTotalYaw(), Devices.navx.getYawRate(), Devices.navx.getHeading());
 			LCD.printLine(5, "winchSwitch=%b  winchEnc=%d  ballEye=%b", Devices.winchSwitch.get(),
 					Devices.winchEncoder.get(), !Devices.ballEye.get());
+			LCD.printLine(6, "pose x=%.1f  y=%.1f  deg=%.1f", pose.getTranslation().getX(), pose.getTranslation().getY(),
+							pose.getRotation().getDegrees());
 			//LCD.printLine(7, "shooter rpm=%d", Devices.shooterEncoder.getRPM());
 			//LCD.printLine(6, "gyro angle=%f  center=%d  offset=%f", Devices.gyro.getAngle(), Devices.gyro.getCenter(), Devices.gyro.getOffset());
 
@@ -217,6 +221,8 @@ class Teleop
 			Devices.climber.set(Util.squareInput(utilY));
 			
 			Devices.hookVictor.set(utilX);
+			
+			pose = Devices.odometer.update();
 			
 			if (firsttime) Util.consoleLog("after first loop");
 			

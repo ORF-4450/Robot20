@@ -93,5 +93,10 @@ public class Channel extends SubSystem
 	{
 		return beltRunning;
 	}
+	
+	public void intakeBall()
+	{
+		Util.consoleLog();
+	}
 }
 

@@ -3,6 +3,7 @@ package Team4450.Robot20;
 import Team4450.Lib.Util;
 import edu.wpi.first.wpilibj.InterruptHandlerFunction;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.lang.Class;
 
 public class Pickup extends SubSystem
 {
@@ -149,12 +150,23 @@ public class Pickup extends SubSystem
 	// eye is triggered and the fired method is called when interrupt occurs.
 	// Keep the length of the code in that method short as no new interrupts
 	// will be reported until fired method ends.
-	private class InterruptHandler extends InterruptHandlerFunction 
+	private class InterruptHandler extends InterruptHandlerFunction<Object> 
 	{
 	     @Override
 	     public void interruptFired(int interruptAssertedMask, Object param) 
 	     {
-	    	 Util.consoleLog("ball  interrupt 2");
+	    	 Util.consoleLog("ball  interrupt");
+	    	 
+	    	 Devices.channel.intakeBall();
+	    	 
+	    	 Channel channel = (Channel) param;
+	    	 channel.intakeBall();
+	     }
+	     
+	     @SuppressWarnings("unused")
+		 public Channel overridableParamter()
+	     {
+			return Devices.channel;
 	     }
 	}
 }

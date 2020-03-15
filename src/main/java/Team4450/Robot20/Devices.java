@@ -71,6 +71,8 @@ public class Devices
 	  // SRX magnetic encoder plugged into a CAN Talon.
 	  public static SRXMagneticEncoderRelative	leftEncoder, rightEncoder, shooterEncoder;
 	  
+	  public static DifferentialOdometer	odometer;
+	  
 	  private static boolean			talonBrakeMode;
 	  
 	  public static GearBox				gearBox;
@@ -181,6 +183,8 @@ public class Devices
  		  utilityStick.invertX(true);
  		  
  		  // Create instances of the singleton subsystem classes.
+ 		  
+ 		  odometer = DifferentialOdometer.getInstance(leftEncoder, rightEncoder, navx);
  		  
  		  gearBox = GearBox.getInstance(robot);
  		  

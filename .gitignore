@@ -16,3 +16,6 @@ dist/
 
 # Eclipse settings
 .settings
+
+# Charaterization project
+Drive Characterization/characterization-project/

@@ -154,7 +154,7 @@ public class Autonomous
 				break;
 
 			case DriveAndStop:
-				autoDrive(.50, 2000, StopMotors.stop, Brakes.on, Pid.off, Heading.angle);
+				autoDrive(.50, 2000, StopMotors.stop, Brakes.on, Pid.on, Heading.angle);
 				break;
 				
 //			case TestPathFinder:
