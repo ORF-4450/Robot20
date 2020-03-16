@@ -11,7 +11,6 @@ import Team4450.Lib.SRXMagneticEncoderRelative;
 import Team4450.Lib.Util;
 import Team4450.Lib.ValveDA;
 import Team4450.Lib.JoyStick.JoyStickButtonIDs;
-import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
@@ -20,12 +19,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-@SuppressWarnings("removal")
 public class Devices
 {
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
@@ -253,10 +250,10 @@ public class Devices
 	  public static String GetCANTalonStatus()
 	  {
 		  return String.format("%.1f/%.1f  %.1f/%.1f  %.1f/%.1f  %.1f/%.1f  %.1f/%.1f  %.1f/%.1f", 
-				  LFCanTalon.getMotorOutputVoltage(), LFCanTalon.getOutputCurrent(),
-				  LRCanTalon.getMotorOutputVoltage(), LRCanTalon.getOutputCurrent(),
-				  RFCanTalon.getMotorOutputVoltage(), RFCanTalon.getOutputCurrent(),
-				  RRCanTalon.getMotorOutputVoltage(), RRCanTalon.getOutputCurrent()
+				  LFCanTalon.getMotorOutputVoltage(), LFCanTalon.getStatorCurrent(),
+				  LRCanTalon.getMotorOutputVoltage(), LRCanTalon.getStatorCurrent(),
+				  RFCanTalon.getMotorOutputVoltage(), RFCanTalon.getStatorCurrent(),
+				  RRCanTalon.getMotorOutputVoltage(), RRCanTalon.getStatorCurrent()
 				  );
 	  }
 }

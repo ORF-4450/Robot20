@@ -23,10 +23,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the build.properties file.
  */
 	
-@SuppressWarnings("deprecation")
 public class Robot extends SampleRobot 
 {
-  static final String  	PROGRAM_NAME = "RAC20-03.12.20-01";
+  static final String  	PROGRAM_NAME = "RAC20-03.15.20-01";
 
   public Properties		robotProperties;
   

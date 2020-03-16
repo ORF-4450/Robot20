@@ -3,13 +3,11 @@ package Team4450.Robot20;
 import Team4450.Lib.Util;
 import edu.wpi.first.wpilibj.InterruptHandlerFunction;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.lang.Class;
 
 public class Pickup extends SubSystem
 {
 	private Robot		robot;
-	private boolean		extended = false, pickupRunning = false, ballDetection = false;
-	private Thread		ballDetectorThread;
+	private boolean		extended = false, pickupRunning = false;
 
 	// This variable used to make this class is a singleton.
 	

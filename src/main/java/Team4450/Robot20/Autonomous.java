@@ -8,6 +8,7 @@ import Team4450.Lib.LaunchPad.LaunchPadControlIDs;
 import Team4450.Robot20.Devices;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
@@ -92,7 +93,8 @@ public class Autonomous
 		
 		autoChooser = new SendableChooser<AutoProgram>();
 		
-		autoChooser.setName("Auto Program");
+		//autoChooser.setName("Auto Program");
+		SendableRegistry.add(autoChooser, "Auto Program");
 		autoChooser.setDefaultOption("No Program (teleop)", AutoProgram.NoProgram);
 		autoChooser.addOption("Drive And Stop", AutoProgram.DriveAndStop);		
 		//autoChooser.addOption("PathFinder Test", AutoProgram.TestPathFinder);		

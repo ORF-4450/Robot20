@@ -10,15 +10,9 @@ import Team4450.Lib.NavX.NavXEvent;
 import Team4450.Lib.NavX.NavXEventListener;
 import Team4450.Lib.NavX.NavXEventType;
 import Team4450.Robot20.Devices;
-import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-
-import com.revrobotics.ColorMatchResult;
 
 class Teleop
 {

@@ -2,7 +2,6 @@ package Team4450.Robot20;
 
 import java.util.ArrayList;
 
-import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 
