@@ -198,7 +198,7 @@ class Teleop
 					else
 					{
 						steeringAssistMode = false;
-						Devices.robotDrive.tankDrive(leftY, rightY);	// Normal tank drive.
+						Devices.robotDrive.tankDrive(leftY, rightY, true);	// Normal tank drive.
 					}
 
 					SmartDashboard.putBoolean("SteeringAssist", steeringAssistMode);

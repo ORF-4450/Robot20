@@ -31,7 +31,8 @@ public class Devices
 	  
 	  public static WPI_VictorSPX		winchFrontVictor, winchBackVictor, hookVictor, colorWheelVictor;
 	  
-	  public static DifferentialDrive	robotDrive;
+	  //public static DifferentialDrive	robotDrive;
+	  public static VelocityDrive		robotDrive;
 	  
 	  public static SpeedControllerGroup	winchDrive;
 	  
@@ -136,21 +137,23 @@ public class Devices
 	      winchBackVictor.setNeutralMode(NeutralMode.Brake);
 	      hookVictor.setNeutralMode(NeutralMode.Brake);
 	      colorWheelVictor.setNeutralMode(NeutralMode.Brake);
-	      
-	      // For 2020 robot, put rear talons into a differential drive object and set the
+		  
+		  // Configure SRX encoders as needed for measuring velocity and distance. 
+		  // 7.5 is wheel diameter in inches. Adjust for each years robot.
+		  rightEncoder = new SRXMagneticEncoderRelative(RRCanTalon, 7.5);
+		  leftEncoder = new SRXMagneticEncoderRelative(LRCanTalon, 7.5);
+		  
+		  leftEncoder.setInverted(true);
+
+	      // For 2020 robot, put rear talons into a velocity drive object and set the
 	      // front talons to follow the rears.
 		  
 		  LFCanTalon.set(ControlMode.Follower, LRCanTalon.getDeviceID());
 		  RFCanTalon.set(ControlMode.Follower, RRCanTalon.getDeviceID());
 		  
-		  robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
-		  
-		  // Configure SRX encoders as needed for measuring velocity and distance. 
-		  // 5.8 is wheel diameter in inches. Adjust for each years robot.
-		  rightEncoder = new SRXMagneticEncoderRelative(RRCanTalon, 7.5);
-		  leftEncoder = new SRXMagneticEncoderRelative(LRCanTalon, 7.5);
-		  
-		  leftEncoder.setInverted(true);
+		  //robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
+		  // Track width = 20in, max speed = 3 m/s, max angular = one rotation/s.
+		  robotDrive = new VelocityDrive(LRCanTalon, RRCanTalon, leftEncoder, rightEncoder, 20, 3.0, 2 * Math.PI);
 		  
 		  //shooterEncoder = new SRXMagneticEncoderRelative(shooterTalon, 5.8);
 		  
