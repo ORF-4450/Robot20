@@ -1,0 +1,1 @@
+Copy this properties file to src/main/deploy to have the file downloaded to the robot by the gradle build.

@@ -152,8 +152,10 @@ public class Devices
 		  RFCanTalon.set(ControlMode.Follower, RRCanTalon.getDeviceID());
 		  
 		  //robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
-		  // Track width = 20in, max speed = 3 m/s, max angular = one rotation/s.
-		  robotDrive = new VelocityDrive(LRCanTalon, RRCanTalon, leftEncoder, rightEncoder, 20, 3.0, 2 * Math.PI);
+		  // Track width = 20in, max speed = 3 m/s, max angular = one rotation/s, p = 1, i = 0, d = 0,
+		  // ks = 1, kv = 1.
+		  robotDrive = new VelocityDrive(LRCanTalon, RRCanTalon, leftEncoder, rightEncoder, 20, 3.0, 2 * Math.PI,
+				  						 1, 0, 0, 1, 1);
 		  
 		  //shooterEncoder = new SRXMagneticEncoderRelative(shooterTalon, 5.8);
 		  
