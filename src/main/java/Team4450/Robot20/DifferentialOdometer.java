@@ -84,6 +84,11 @@ public class DifferentialOdometer
 	
 	/**
 	 * Get current pose from odometer. Pose distances in meters.
+	 * Pose X is distance along the long side of the field from your driver
+	 * station wall. Y is distance along the short side of the field starting
+	 * on the left. Angle is referenced from zero as pointing directly at the
+	 * opposition driver station wall, + is left, - is right of that zero
+	 * alignment.
 	 * @return Current pose.
 	 */
 	public Pose2d getPose()
@@ -95,7 +100,8 @@ public class DifferentialOdometer
 	 * Reset odometer to new pose and angle. Resets encoders. You must reset
 	 * the Navx angle manually.
 	 * @param pose New starting pose.
-	 * @param angle New starting angle.
+	 * @param angle Current gyro angle used to offset future angle measurements
+	 * acting to reset odometer angle without resetting gyro.
 	 */
 	public void reset(Pose2d pose, Rotation2d angle)
 	{
