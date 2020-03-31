@@ -47,8 +47,6 @@ public class Pickup extends SubSystem
 	{
 		Util.consoleLog();
 		
-		stop();
-		
 		retract();
 	}
 
@@ -56,8 +54,6 @@ public class Pickup extends SubSystem
 	void disable()
 	{
 		Util.consoleLog();
-
-		stop();
 		
 		retract();
 	}
@@ -157,14 +153,22 @@ public class Pickup extends SubSystem
 	    	 
 	    	 Devices.channel.intakeBall();
 	    	 
-	    	 Channel channel = (Channel) param;
-	    	 channel.intakeBall();
+	    	 //((Channel) param).intakeBall();
 	     }
 	     
-	     @SuppressWarnings("unused")
-		 public Channel overridableParamter()
-	     {
-			return Devices.channel;
-	     }
+	     // If you wanted to pass a fixed object reference to the interruptFired()
+	     // function whenever there is an interrupt, below is the initialization
+	     // code and last line above in interrupteFired() shows how to use the
+	     // passed in object. Note the two ways to call channel.intakeBall()
+	     // appear to be equivalent...
+	     // Note: Doing this expects that Devices.channel is instanced before
+	     // Devices.pickup since the routine below is only called in the Pickup
+	     // constructor and so Devices.channel must exist when Pickup is created.
+//	     @Override
+//		 public Channel overridableParameter()
+//	     {
+//	    	 Util.consoleLog();
+//	    	 return Devices.channel;
+//	     }
 	}
 }

@@ -12,6 +12,7 @@ import Team4450.Lib.NavX.NavXEventType;
 import Team4450.Robot20.Devices;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 class Teleop
@@ -64,7 +65,7 @@ class Teleop
 
 	void OperatorControl() throws Exception
 	{
-		double	rightY = 0, leftY = 0, utilX = 0, utilY = 0, rightX = 0, leftX = 0;
+		double	rightY = 0, leftY = 0, utilX = 0, utilY = 0, rightX = 0, leftX = 0, count = 0;
 		double	gain = .05;
 		boolean	steeringAssistMode = false;
 		boolean firsttime = true;
@@ -113,8 +114,8 @@ class Teleop
 		Devices.gearBox.enable();
 		Devices.climber.enable();
 		Devices.pickup.enable();
-//		Devices.shooter.enable();
-//		Devices.channel.enable();
+		//Devices.shooter.enable();
+		Devices.channel.enable();
 
 		// Motor safety turned on.
 		Devices.robotDrive.setSafetyEnabled(true);
@@ -216,15 +217,18 @@ class Teleop
 			
 			Devices.hookVictor.set(utilX);
 			
+			// Update robot position tracking.
+			
 			pose = Devices.odometer.update();
-			
-			if (firsttime) Util.consoleLog("after first loop");
-			
-			firsttime = false;
 		
-			// Cause smartdashboard to update any registered Sendables, including Gyro2.
+			// Update any Sendables you want sent on each loop, including navx (Gyro2).
+			// Note: Using SmartDashboard.updateValues() will send every Sendable registered
+			// with SmartDashboard. This could probably send a lot of data that is not changing
+			// (often) on every loop, that is every 20ms. This is quite inefficient so it is better
+			// to manually control when Sendables are updated so their data is sent only when 
+			// they change.
 			
-			SmartDashboard.updateValues();
+			Devices.navx.updateSendable();
 			
 			// Update game color on DS.
 
@@ -232,13 +236,19 @@ class Teleop
 			
 			if (gameData != null) SmartDashboard.putString("GameColor", ColorWheel.convertGameColor(gameData));
 
-
 			// End of driving loop.
+			
+			if (firsttime) Util.consoleLog("after first loop");
+			
+			firsttime = false;
 
 			Timer.delay(.020);	// wait 20ms for update from driver station.
 		}
 
 		// End of teleop mode.
+		
+		SmartDashboard.putBoolean("AltDriveMode", false);
+		SmartDashboard.putBoolean("SteeringAssist", false);
 
 		Util.consoleLog("end");
 	}

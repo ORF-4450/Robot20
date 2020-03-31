@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 	
 public class Robot extends SampleRobot 
 {
-  static final String  	PROGRAM_NAME = "RAC20-03.15.20-01";
+  static final String  	PROGRAM_NAME = "RAC20-03.29.20-01";
 
   public Properties		robotProperties;
   
@@ -112,7 +112,7 @@ public class Robot extends SampleRobot
    		
 		SmartDashboard.putString("Program", PROGRAM_NAME);
    		
-   		SmartDashboard.putData("Version", SendableVersion.INSTANCE);
+   		SmartDashboard.putData(SendableVersion.INSTANCE.getName(), SendableVersion.INSTANCE);
    		
    		// Set compressor enabled switch on dashboard from properties file.
    		// Later code will read that setting from the dashboard and turn 
@@ -139,13 +139,13 @@ public class Robot extends SampleRobot
    		// Navx calibrates at power on and must complete before robot moves. Takes 12 seconds.
 
    		Devices.navx = NavX.getInstance(NavX.PortType.SPI);
-   		
-   		//Devices.navx.dumpValuesToNetworkTables();
 
    		// Add navx as a Sendable. Updates the Gyro indicator automatically when 
    		// SmartDashboard.updateValues() is called elsewhere.
    		
    		SmartDashboard.putData("Gyro2", Devices.navx);
+
+   		Devices.odometer = DifferentialOdometer.getInstance(Devices.leftEncoder, Devices.rightEncoder, Devices.navx);
 
    		// Start the battery, compressor, PDP and camera feed monitoring Tasks.
 
@@ -171,6 +171,8 @@ public class Robot extends SampleRobot
        	
        	Autonomous.setAutoChoices();
    		
+       	// Record NavX info to network tables and log.
+       	
    		Devices.navx.dumpValuesToNetworkTables();
    		
    		if (Devices.navx.isConnected())
@@ -216,17 +218,17 @@ public class Robot extends SampleRobot
 		  SmartDashboard.putBoolean("FMS", Devices.ds.isFMSAttached());
 		  SmartDashboard.putBoolean("AutoTarget", false);
 		  SmartDashboard.putBoolean("TargetLocked", false);
-		  SmartDashboard.putBoolean("Overload", false);
-		  SmartDashboard.putNumber("AirPressure", 0);
-		  SmartDashboard.putBoolean("AltDriveMode", false);
-		  SmartDashboard.putBoolean("SteeringAssist", false);
-		  SmartDashboard.putBoolean("Brake", false);
-		  SmartDashboard.putBoolean("Pickup", false);
-		  SmartDashboard.putBoolean("PickupExtended", false);
-		  SmartDashboard.putBoolean("CountingTurns", false);
-		  SmartDashboard.putBoolean("RotatingToTarget", false);
-		  SmartDashboard.putBoolean("Shooter", false);
-		  SmartDashboard.putBoolean("Belt", false);
+		  //SmartDashboard.putBoolean("Overload", false);
+		  //SmartDashboard.putNumber("AirPressure", 0);
+		  //SmartDashboard.putBoolean("AltDriveMode", false);
+		  //SmartDashboard.putBoolean("SteeringAssist", false);
+		  //SmartDashboard.putBoolean("Brake", false);
+		  //SmartDashboard.putBoolean("Pickup", false);
+		  //SmartDashboard.putBoolean("PickupExtended", false);
+		  //SmartDashboard.putBoolean("CountingTurns", false);
+		  //SmartDashboard.putBoolean("RotatingToTarget", false);
+		  //SmartDashboard.putBoolean("Shooter", false);
+		  //SmartDashboard.putBoolean("Belt", false);
 		  SmartDashboard.putString("GameColor", "");
 
 		  Util.consoleLog("end");

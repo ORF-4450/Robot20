@@ -15,6 +15,12 @@ Operates the robot "TBA" for FRC game "INFINITE RECHARGE".
 ### If RobotLib gets an update:
 1) download the RobotLib.json file from the RobotLib Github repo and drop it into the vendordeps folder inside the project folder. Build the project.
 ****************************************************************************************************************
+Version 20.2-RAC
+
+*	Updated to work with RobotLib v3.6.0 changes.
+
+R. Corn, March 30 2020
+
 Version 20.1-RAC
 
 *	Added subsystem classes for Shooter, Climber and  Pickup.

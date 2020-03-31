@@ -181,14 +181,14 @@ public class Devices
  		  
  		  // Create instances of the singleton subsystem classes.
  		  
- 		  odometer = DifferentialOdometer.getInstance(leftEncoder, rightEncoder, navx);
+ 		  //odometer = DifferentialOdometer.getInstance(leftEncoder, rightEncoder, navx);
  		  
  		  gearBox = GearBox.getInstance(robot);
  		  
  		  //shooter = Shooter.getInstance(robot);
  		  climber = Climber.getInstance(robot);
- 		  pickup = Pickup.getInstance(robot);
  		  channel = Channel.getInstance(robot);
+ 		  pickup = Pickup.getInstance(robot);
  		  colorWheel = ColorWheel.getInstance(robot);
  		  
  		  visionLL = VisionLL.getInstance(robot);
