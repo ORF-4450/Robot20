@@ -18,8 +18,9 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
  * ks and kv values determined by the Characterization process. Motors are
  * controlled by setting voltage as determined by the feed forward and PID
  * controllers trying to match desired velocity to measured velocity.
- * You must measure max velocity, max angular velocity,  ks and kv for each
- * robot that uses this class to get correct results.
+ * You must measure max velocity, max angular velocity, ks and kv for each
+ * robot that uses this class to get correct results. Use the FIRST robot
+ * characterization tool for this.
  */
 public class VelocityDrive extends MotorSafety
 {
@@ -48,11 +49,11 @@ public class VelocityDrive extends MotorSafety
 	 * @param trackWidth		Track width of robot in inches.
 	 * @param maxSpeed			Max speed of robot in m/s.
 	 * @param maxAngularSpeed	Max angular speed of robot in radians/s.
-	 * @param p					P term for PID controllers.
-	 * @param i					I term for PID controllers.
-	 * @param d					D term for PID controllers.
-	 * @param ks				Feed forward static gain (volts).
-	 * @param kv				Feed forward velocity gain (volts * seconds / distance).
+	 * @param p					P term for PID controllers. 1 is a good default.
+	 * @param i					I term for PID controllers. 0 is a good default.
+	 * @param d					D term for PID controllers. 0 is a good default.
+	 * @param ks				Feed forward static gain (volts). 1 is a good default.
+	 * @param kv				Feed forward velocity gain (volts * seconds / distance). 1 is a good default.
 	 */
 	public VelocityDrive(SpeedController leftController, 
 						 SpeedController rightController,
@@ -83,7 +84,8 @@ public class VelocityDrive extends MotorSafety
 	}
 	
 	/**
-	 * Sets the desired wheel speeds.
+	 * Sets the desired wheel speeds by using current speeds and PID controllers
+	 * to calculate the motor voltage to sync actual to desired.
 	 *
 	 * @param speeds The desired wheel speeds.
 	 */
@@ -92,8 +94,8 @@ public class VelocityDrive extends MotorSafety
 	    final double leftFeedforward = feedforward.calculate(speeds.leftMetersPerSecond);
 	    final double rightFeedforward = feedforward.calculate(speeds.rightMetersPerSecond);
 	    
-	    final double leftSpeed = leftEncoder.getRate(PIDRateType.velocityMPS);
-	    final double rightSpeed = rightEncoder.getRate(PIDRateType.velocityMPS);
+	    final double leftSpeed = leftEncoder.getVelocity(PIDRateType.velocityMPS);
+	    final double rightSpeed = rightEncoder.getVelocity(PIDRateType.velocityMPS);
 	
 	    final double leftOutput = leftPIDController.calculate(leftSpeed, speeds.leftMetersPerSecond);
 	    final double rightOutput = rightPIDController.calculate(rightSpeed, speeds.rightMetersPerSecond);
@@ -101,7 +103,11 @@ public class VelocityDrive extends MotorSafety
 	    leftController.setVoltage(leftOutput + leftFeedforward);
 	    rightController.setVoltage(rightOutput + rightFeedforward);
 	    
-	    feed();
+	    Util.consoleLog("lt=%.3f la=%.3f lo=%.3f lf=%.3f - rt=%.3f ra=%.3f ro=%.3f rf=%.3f",
+	    		speeds.leftMetersPerSecond, leftSpeed, leftOutput, leftFeedforward,
+	    		speeds.rightMetersPerSecond, rightSpeed, rightOutput, rightFeedforward);
+	    
+	    //feed();
 	}
 	
 	/**
@@ -133,13 +139,12 @@ public class VelocityDrive extends MotorSafety
 	 * Drives the robot with the given linear velocity and angular velocity.
 	 * This is arcade style.
 	 * @param fbSpeed 	Linear velocity as a % of max speed (forward/backward). Ranges -1 to +1, + is forward.
-	 * Unit is m/s.
-	 * @param rot		Angular velocity as a % if max angular speed. Ranges -1 to +1, + is right. Unit is rad/s.
+	 * @param rot		Angular velocity as a % of max angular speed. Ranges -1 to +1, + is right.
 	*/
 	public void arcadeDrive(double fbSpeed, double rot)
 	{
 		// Note we invert rot because we like to work + as clockwise, but ChassisSpeeds expects + to be counter
-		//  clockwise.
+		// clockwise. Also note that the Y axis speed is zero since tank robot can't move sideways.
 		DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(new ChassisSpeeds(fbSpeed * maxSpeed, 
 				0.0, -rot * maxAngularSpeed));
 		
@@ -148,11 +153,11 @@ public class VelocityDrive extends MotorSafety
 	
 	/**
 	 * Not Implemented.
-	 * @param power
+	 * @param fbSpeed
 	 * @param curve
 	 * @param quickTurn
 	 */
-	public void curvatureDrive(double xSpeed, double zRotation, boolean quickTurn)
+	public void curvatureDrive(double fbSpeed, double curve, boolean quickTurn)
 	{
 		
 	}

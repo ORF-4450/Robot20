@@ -180,7 +180,9 @@ public class Robot extends SampleRobot
    			Exception e = new Exception("NavX is NOT connected!");
    			Util.logException(e);
    		}
-   		
+		  
+   		Devices.odometer = DifferentialOdometer.getInstance(Devices.leftEncoder, Devices.rightEncoder, Devices.navx);
+
        	lastRobotState = currentRobotState;
        	
    		Util.consoleLog("end");

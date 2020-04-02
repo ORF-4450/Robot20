@@ -9,6 +9,8 @@ import Team4450.Lib.LaunchPad.*;
 import Team4450.Lib.NavX.NavXEvent;
 import Team4450.Lib.NavX.NavXEventListener;
 import Team4450.Lib.NavX.NavXEventType;
+import Team4450.Lib.Wpilib.PIDController;
+import Team4450.Lib.Wpilib.PIDSourceType;
 import Team4450.Robot20.Devices;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -71,6 +73,18 @@ class Teleop
 		String	gameData = "";
 		int		angle;
 		Pose2d	pose = Devices.odometer.getPose();
+		
+		SynchronousPID	sPid = new SynchronousPID(1, 0 , 0);
+		sPid.setName("syncPIDTest");
+		
+		PIDSourceShim	pidSource = new PIDSourceShim(null);
+		pidSource.setPIDSourceType(PIDSourceType.kDisplacement);
+		
+		PIDOutputShim	pidOutput = new PIDOutputShim(null);
+		
+		PIDController	pid = new PIDController(1, 0, 0, pidSource, pidOutput);
+		pid.setName("PIDtest");
+		pidSource.setPidController(pid);
 
 		// Motor safety turned off during initialization.
 
@@ -115,6 +129,15 @@ class Teleop
 		Devices.pickup.enable();
 //		Devices.shooter.enable();
 //		Devices.channel.enable();
+		
+		sPid.setOutputRange(-1, 1);
+		sPid.setSetpoint(1.0);
+		SmartDashboard.putData(sPid.getName(), sPid);
+		
+		pid.setOutputRange(-1, 1);
+		pid.setSetpoint(1.0);
+		pid.setEnabled(true);
+		SmartDashboard.putData(pid.getName(), pid);
 
 		// Motor safety turned on.
 		Devices.robotDrive.setSafetyEnabled(true);
@@ -122,6 +145,8 @@ class Teleop
 		// Driving loop runs until teleop is over.
 
 		Util.consoleLog("enter driving loop");
+		
+		LaunchPadControl rocker = Devices.launchPad.FindButton(LaunchPadControlIDs.ROCKER_LEFT_BACK);
 
 		while (robot.isEnabled())	// && robot.isOperatorControl())
 		{
@@ -143,13 +168,17 @@ class Teleop
 			utilY = Devices.utilityStick.GetY();
 			utilX = Devices.utilityStick.GetX();
 			
+			sPid.calculate(utilX, .02);
+			//sPid.updateSendable();
+			pidSource.set(utilX);
+			
 			LCD.printLine(2, "leftenc=%d  rightenc=%d", Devices.leftEncoder.get(), Devices.rightEncoder.get());			
 			LCD.printLine(3, "leftY=%.3f (%.3f)  rightY=%.3f (%.3f)  -  rightX=%.3f  utilY=%.3f  utilX=%.3f", leftY, 
 					 Devices.LRCanTalon.get(), rightY, Devices.RRCanTalon.get(), rightX, utilY, utilX);
 			LCD.printLine(4, "yaw=%.2f, total=%.2f, rate=%.2f, hdng=%.2f", Devices.navx.getYaw(), 
 					Devices.navx.getTotalYaw(), Devices.navx.getYawRate(), Devices.navx.getHeading());
-			LCD.printLine(5, "winchSwitch=%b  winchEnc=%d  ballEye=%b", Devices.winchSwitch.get(),
-					Devices.winchEncoder.get(), !Devices.ballEye.get());
+			LCD.printLine(5, "winchSwitch=%b  winchEnc=%d  ballEye=%b  rocker=%b", Devices.winchSwitch.get(),
+					Devices.winchEncoder.get(), !Devices.ballEye.get(), rocker.currentState);
 			LCD.printLine(6, "pose x=%.1f  y=%.1f  deg=%.1f", pose.getTranslation().getX(), pose.getTranslation().getY(),
 							pose.getRotation().getDegrees());
 			//LCD.printLine(7, "shooter rpm=%d", Devices.shooterEncoder.getRPM());
@@ -214,14 +243,14 @@ class Teleop
 			
 			Devices.climber.set(Util.squareInput(utilY));
 			
-			Devices.hookVictor.set(utilX);
+			//Devices.hookVictor.set(utilX);
 			
 			pose = Devices.odometer.update();
 			
 			if (firsttime) Util.consoleLog("after first loop");
 			
 			firsttime = false;
-		
+
 			// Cause smartdashboard to update any registered Sendables, including Gyro2.
 			
 			SmartDashboard.updateValues();

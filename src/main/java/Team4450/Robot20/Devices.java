@@ -119,8 +119,10 @@ public class Devices
 	      LFCanTalon.setInverted(true);
 		  LRCanTalon.setInverted(true);
 		  
-		  RFCanTalon.setInverted(true);
-		  RRCanTalon.setInverted(true);
+		  // These should be true for regular tank. Like this for 
+		  // velocity tank.
+		  RFCanTalon.setInverted(false);
+		  RRCanTalon.setInverted(false);
 		  
 		  pickupTalon.setInverted(true);
 
@@ -140,8 +142,8 @@ public class Devices
 		  
 		  // Configure SRX encoders as needed for measuring velocity and distance. 
 		  // 7.5 is wheel diameter in inches. Adjust for each years robot.
-		  rightEncoder = new SRXMagneticEncoderRelative(RRCanTalon, 7.5);
-		  leftEncoder = new SRXMagneticEncoderRelative(LRCanTalon, 7.5);
+		  rightEncoder = new SRXMagneticEncoderRelative(RRCanTalon, 6.125);
+		  leftEncoder = new SRXMagneticEncoderRelative(LRCanTalon, 6.125);
 		  
 		  leftEncoder.setInverted(true);
 
@@ -154,7 +156,7 @@ public class Devices
 		  //robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
 		  // Track width = 20in, max speed = 3 m/s, max angular = one rotation/s, p = 1, i = 0, d = 0,
 		  // ks = 1, kv = 1.
-		  robotDrive = new VelocityDrive(LRCanTalon, RRCanTalon, leftEncoder, rightEncoder, 20, 3.0, 2 * Math.PI,
+		  robotDrive = new VelocityDrive(LRCanTalon, RRCanTalon, leftEncoder, rightEncoder, 23, 3.0, 2 * Math.PI,
 				  						 1, 0, 0, 1, 1);
 		  
 		  //shooterEncoder = new SRXMagneticEncoderRelative(shooterTalon, 5.8);
@@ -185,8 +187,6 @@ public class Devices
  		  utilityStick.invertX(true);
  		  
  		  // Create instances of the singleton subsystem classes.
- 		  
- 		  odometer = DifferentialOdometer.getInstance(leftEncoder, rightEncoder, navx);
  		  
  		  gearBox = GearBox.getInstance(robot);
  		  

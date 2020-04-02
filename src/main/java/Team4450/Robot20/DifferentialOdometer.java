@@ -25,6 +25,8 @@ public class DifferentialOdometer
 	
 	private static DifferentialOdometer	INSTANCE = null;
 	
+	// Private constructor, all part of singleton pattern.
+	
 	private DifferentialOdometer (SRXMagneticEncoderRelative leftEncoder, 
 								  SRXMagneticEncoderRelative rightEncoder,
 								  NavX navx)
@@ -92,9 +94,11 @@ public class DifferentialOdometer
 	}
 	
 	/**
-	 * Reset odometer to new pose and angle. Resets encoders. You must reset
-	 * the Navx angle manually.
-	 * @param pose New starting pose.
+	 * Reset odometer to new starting pose and angle. Resets encoders. The angle
+	 * would normally be the current gyro angle to be used as an offset to zero
+	 * the odometer angle tracking without resetting the gyro. If you wish to
+	 * reset the gyro, do so manually and set the angle to zero.
+	 * @param pose 	New starting pose.
 	 * @param angle New starting angle.
 	 */
 	public void reset(Pose2d pose, Rotation2d angle)
