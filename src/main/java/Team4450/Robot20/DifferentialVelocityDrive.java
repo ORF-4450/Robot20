@@ -13,16 +13,21 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 
 /**
  * Velocity drive controls drive base motors in tank configuration based on
- * desired velocity, specified as 0-1 input times the max velocity of the
- * robot summed with feed forward computed from the same 0-1 input and the
- * ks and kv values determined by the Characterization process. Motors are
- * controlled by setting voltage as determined by the feed forward and PID
- * controllers trying to match desired velocity to measured velocity.
+ * target velocity, specified as +-0->1 input times the max velocity of the
+ * robot. Feed forward is computed from the desired velocity and the
+ * ks and kv gain values determined by the Characterization process. These
+ * values are in units of voltage so the feed forward calculation results
+ * in a target voltage. The PID controllers add an additional amount based
+ * on the error between target velocity and actual velocity. 
+ * Motors are controlled by setting voltage which compensates for battery
+ * voltage decline as robot operates. Velocities are in meters/second.
  * You must measure max velocity, max angular velocity, ks and kv for each
  * robot that uses this class to get correct results. Use the FIRST robot
- * characterization tool for this.
+ * Characterization tool for this. Note this class must use the new Wpilib 
+ * synchronous PID controller to work correctly. Do not change it to use
+ * the threaded PID controller from either Wpilib or the copy in Robotlib.
  */
-public class VelocityDrive extends MotorSafety
+public class DifferentialVelocityDrive extends MotorSafety
 {
 	public final double maxSpeed; 			// meters per second.
 	public final double maxAngularSpeed;	// radians per second.
@@ -55,7 +60,7 @@ public class VelocityDrive extends MotorSafety
 	 * @param ks				Feed forward static gain (volts). 1 is a good default.
 	 * @param kv				Feed forward velocity gain (volts * seconds / distance). 1 is a good default.
 	 */
-	public VelocityDrive(SpeedController leftController, 
+	public DifferentialVelocityDrive(SpeedController leftController, 
 						 SpeedController rightController,
 						 SRXMagneticEncoderRelative leftEncoder, 
 						 SRXMagneticEncoderRelative rightEncoder,
@@ -84,21 +89,29 @@ public class VelocityDrive extends MotorSafety
 	}
 	
 	/**
-	 * Sets the desired wheel speeds by using current speeds and PID controllers
-	 * to calculate the motor voltage to sync actual to desired.
+	 * Sets the desired wheel speeds by using current speeds and PID + Feed Forward
+	 * controllers to calculate the motor voltage to sync actual to desired speed.
 	 *
 	 * @param speeds The desired wheel speeds.
 	 */
 	private void setSpeeds(DifferentialDriveWheelSpeeds speeds) 
 	{
+		// Feed forwards are in volts.
 	    final double leftFeedforward = feedforward.calculate(speeds.leftMetersPerSecond);
 	    final double rightFeedforward = feedforward.calculate(speeds.rightMetersPerSecond);
 	    
 	    final double leftSpeed = leftEncoder.getVelocity(PIDRateType.velocityMPS);
 	    final double rightSpeed = rightEncoder.getVelocity(PIDRateType.velocityMPS);
 	
+	    // PID output is in m/s, as the error is target vel minus actual vel, multiplied by
+	    // the PID factors. The P factor needs to scale the m/s error to voltage. Hence P for
+	    // max vel of 3 m/s and 12 volts max power is 12/3 or 4. The error * 4 is target voltage.
+	    
 	    final double leftOutput = leftPIDController.calculate(leftSpeed, speeds.leftMetersPerSecond);
 	    final double rightOutput = rightPIDController.calculate(rightSpeed, speeds.rightMetersPerSecond);
+	    
+	    // SetVoltage as a range of -12 to + 12. Internally, it is scaled by the actual battery voltage
+	    // to arrive at a % output in the -1 to +1 range which is sent to the set() function.
 	    
 	    leftController.setVoltage(leftOutput + leftFeedforward);
 	    rightController.setVoltage(rightOutput + rightFeedforward);
