@@ -182,7 +182,8 @@ class Teleop
 					Devices.winchEncoder.get(), !Devices.ballEye.get(), rocker.currentState);
 			LCD.printLine(6, "pose x=%.1f  y=%.1f  deg=%.1f", pose.getTranslation().getX(), pose.getTranslation().getY(),
 							pose.getRotation().getDegrees());
-			LCD.printLine(7, "max vel=%.3f", Devices.leftEncoder.getMaxVelocity(PIDRateType.velocityMPS));
+			LCD.printLine(7, "Lmax vel=%.3f - Rmax vel=%.3f", Devices.leftEncoder.getMaxVelocity(PIDRateType.velocityMPS),
+					 Devices.rightEncoder.getMaxVelocity(PIDRateType.velocityMPS));
 			//LCD.printLine(7, "shooter rpm=%d", Devices.shooterEncoder.getRPM());
 			//LCD.printLine(6, "gyro angle=%f  center=%d  offset=%f", Devices.gyro.getAngle(), Devices.gyro.getCenter(), Devices.gyro.getOffset());
 

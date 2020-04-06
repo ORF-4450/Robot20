@@ -120,7 +120,7 @@ public class Devices
 	      LFCanTalon.setInverted(true);
 		  LRCanTalon.setInverted(true);
 		  
-		  // These should be true for regular tank. Like this for 
+		  // These should be true for regular tank, false for 
 		  // velocity tank.
 		  RFCanTalon.setInverted(false);
 		  RRCanTalon.setInverted(false);
@@ -158,7 +158,7 @@ public class Devices
 		  // Track width = 23in, max speed = 3 m/s, max angular = one rotation/s, p = 12 / max speed, i = 0, d = 0,
 		  // ks = 1, kv = 1.
 		  robotDrive = new DifferentialVelocityDrive(LRCanTalon, RRCanTalon, leftEncoder, rightEncoder, 23, 3.0, 2 * Math.PI,
-				  						 1, 0, 0, 1, 1);	// 12 / 3.0
+				  						 12 / 3, 0, 0, 1, 1);	// 12 / 3.0
 		  
 		  //shooterEncoder = new SRXMagneticEncoderRelative(shooterTalon, 5.8);
 		  
