@@ -11,6 +11,7 @@ import Team4450.Lib.SRXMagneticEncoderRelative;
 import Team4450.Lib.Util;
 import Team4450.Lib.ValveDA;
 import Team4450.Lib.JoyStick.JoyStickButtonIDs;
+
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
@@ -32,7 +33,7 @@ public class Devices
 	  public static WPI_VictorSPX		winchFrontVictor, winchBackVictor, hookVictor, colorWheelVictor;
 	  
 	  //public static DifferentialDrive	robotDrive;
-	  public static VelocityDrive		robotDrive;
+	  public static DifferentialVelocityDrive		robotDrive;
 	  
 	  public static SpeedControllerGroup	winchDrive;
 	  
@@ -154,10 +155,10 @@ public class Devices
 		  RFCanTalon.set(ControlMode.Follower, RRCanTalon.getDeviceID());
 		  
 		  //robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
-		  // Track width = 20in, max speed = 3 m/s, max angular = one rotation/s, p = 1, i = 0, d = 0,
+		  // Track width = 23in, max speed = 3 m/s, max angular = one rotation/s, p = 12 / max speed, i = 0, d = 0,
 		  // ks = 1, kv = 1.
-		  robotDrive = new VelocityDrive(LRCanTalon, RRCanTalon, leftEncoder, rightEncoder, 23, 3.0, 2 * Math.PI,
-				  						 1, 0, 0, 1, 1);
+		  robotDrive = new DifferentialVelocityDrive(LRCanTalon, RRCanTalon, leftEncoder, rightEncoder, 23, 3.0, 2 * Math.PI,
+				  						 1, 0, 0, 1, 1);	// 12 / 3.0
 		  
 		  //shooterEncoder = new SRXMagneticEncoderRelative(shooterTalon, 5.8);
 		  
