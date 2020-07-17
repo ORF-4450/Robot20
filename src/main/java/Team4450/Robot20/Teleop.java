@@ -185,6 +185,14 @@ class Teleop
 			LCD.printLine(7, "Lmax vel=%.3f - Rmax vel=%.3f", Devices.leftEncoder.getMaxVelocity(PIDRateType.velocityMPS),
 					 Devices.rightEncoder.getMaxVelocity(PIDRateType.velocityMPS));
 			//LCD.printLine(7, "shooter rpm=%d", Devices.shooterEncoder.getRPM());
+			LCD.printLine(8, "rate=%d  maxrate=%d  rpm=%d  maxrpm=%d  vel=%.3f  maxvel=%.3f", 
+					Devices.leftEncoder.getRate(PIDRateType.ticksPer100ms), 
+					Devices.leftEncoder.getMaxRate(PIDRateType.ticksPer100ms),
+					Devices.leftEncoder.getRPM(),
+					Devices.leftEncoder.getMaxRPM(),
+					Devices.leftEncoder.getVelocity(PIDRateType.velocityMPS),
+					Devices.leftEncoder.getMaxVelocity(PIDRateType.velocityMPS)
+					);
 			//LCD.printLine(6, "gyro angle=%f  center=%d  offset=%f", Devices.gyro.getAngle(), Devices.gyro.getCenter(), Devices.gyro.getOffset());
 
 			//LCD.printLine(10, "pressureV=%.2f  psi=%d  ustb=%b", robot.monitorCompressorThread.getVoltage(), 

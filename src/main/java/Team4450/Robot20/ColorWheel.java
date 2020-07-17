@@ -165,7 +165,6 @@ public class ColorWheel extends SubSystem
 				color = "";
 				break;
 	  }
-
 		return color;
 	}
 	
@@ -185,7 +184,7 @@ public class ColorWheel extends SubSystem
 		
 		colorSensor.resetColorMatcher();
 
-		if(gameData.length() > 0)
+		if(gameData != null && gameData.length() > 0)
 		{
 			switch (gameData.charAt(0))
 			{
@@ -218,7 +217,7 @@ public class ColorWheel extends SubSystem
 					break;
 		  }
 		} else {
-			// no data received yet no match.
+			// no data received yet so no match.
 		}		
 
 		SmartDashboard.putString("GameColor", color);
@@ -283,14 +282,14 @@ public class ColorWheel extends SubSystem
 	    	Util.consoleLog();	
 
 	    	countingTurns = true;
-			
-	    	// Current color is color we will count when it passes by the sensor
-	    	// after the first time. We have to detect color change and count the
-	    	// change if it changes back to target color from not target color.
-	    	
-			setTargetToCurrentColor();
-			
-			onTargetColor = true;
+				
+		    	// Current color is color we will count when it passes by the sensor
+		    	// after the first time. We have to detect color change and count the
+		    	// change if it changes back to target color from not target color.
+		    	
+				setTargetToCurrentColor();
+				
+				onTargetColor = true;
 
 	    	updateDS();
 	    	
