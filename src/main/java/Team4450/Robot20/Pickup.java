@@ -155,10 +155,10 @@ public class Pickup extends SubSystem
 	     {
 	    	 Util.consoleLog("ball  interrupt");
 	    	 
-	    	 Devices.channel.intakeBall();
-	    	 
-	    	 Channel channel = (Channel) param;
-	    	 channel.intakeBall();
+//	    	 Devices.channel.intakeBall();
+//	    	 
+//	    	 Channel channel = (Channel) param;
+//	    	 channel.intakeBall();
 	     }
 	     
 	     @SuppressWarnings("unused")

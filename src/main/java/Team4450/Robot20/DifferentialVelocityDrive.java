@@ -116,9 +116,9 @@ public class DifferentialVelocityDrive extends MotorSafety
 	    leftController.setVoltage(leftOutput + leftFeedforward);
 	    rightController.setVoltage(rightOutput + rightFeedforward);
 	    
-	    Util.consoleLog("lt=%.3f la=%.3f lo=%.3f lf=%.3f ls=%.3f - rt=%.3f ra=%.3f ro=%.3f rf=%.3f rs=%.3f",
-	    		speeds.leftMetersPerSecond, leftSpeed, leftOutput, leftFeedforward, leftController.get(),
-	    		speeds.rightMetersPerSecond, rightSpeed, rightOutput, rightFeedforward, rightController.get());
+//	    Util.consoleLog("lt=%.3f la=%.3f lo=%.3f lf=%.3f ls=%.3f - rt=%.3f ra=%.3f ro=%.3f rf=%.3f rs=%.3f",
+//	    		speeds.leftMetersPerSecond, leftSpeed, leftOutput, leftFeedforward, leftController.get(),
+//	    		speeds.rightMetersPerSecond, rightSpeed, rightOutput, rightFeedforward, rightController.get());
 	    
 	    //feed();
 	}
