@@ -13,13 +13,14 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
  * SRX Magnetic Encoders.
  * Tracks position of robot as it travels around the field.
  * Reliable for autonomous, not so much for teleop. User
- * must call update on a regular basis for tracking to occur.
+ * must call update() on a regular basis for tracking to occur.
  */
 public class DifferentialOdometer
 {
 	private SRXMagneticEncoderRelative	leftEncoder, rightEncoder;
 	private NavX						navx;
 	private DifferentialDriveOdometry	odometer;
+	private double						cumulativeLeftCount, cumulativeRightCount;
 	
 	// This variable used to make this class is a singleton.
 	
@@ -77,9 +78,14 @@ public class DifferentialOdometer
 	 */
 	public Pose2d update()
 	{
-		return odometer.update(navx.getTotalYaw2d(), 
-							   leftEncoder.getDistance(DistanceUnit.Meters), 
-							   leftEncoder.getDistance(DistanceUnit.Meters));
+		// Odometer uses total encoder count since start of match (or odometer reset).
+		// So we need to track that as encoders can be reset at any time to facilitate
+		// navigation functions along the way.
+		
+		cumulativeLeftCount += leftEncoder.getDistance(DistanceUnit.Meters);
+		cumulativeRightCount += leftEncoder.getDistance(DistanceUnit.Meters);
+		
+		return odometer.update(navx.getTotalYaw2d(), cumulativeLeftCount, cumulativeRightCount);
 	}
 	
 	/**
@@ -107,7 +113,7 @@ public class DifferentialOdometer
 	{
 		odometer.resetPosition(pose, angle);
 		
-		leftEncoder.reset();
-		rightEncoder.reset();
+		cumulativeLeftCount = 0;
+		cumulativeRightCount = 0;
 	}
 }

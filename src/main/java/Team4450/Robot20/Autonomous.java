@@ -120,7 +120,7 @@ public class Autonomous
 
 		// Initialize wheel encoders.
 		
-		Util.consoleLog("at reset le=%d  re=%d", Devices.leftEncoder.get(), Devices.rightEncoder.get());
+		Util.consoleLog("at encoder reset le=%d  re=%d", Devices.leftEncoder.get(), Devices.rightEncoder.get());
 		
 		// Set encoders to update every 100ms.
 		Devices.rightEncoder.setStatusFramePeriod(100);
