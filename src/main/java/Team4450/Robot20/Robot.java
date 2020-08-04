@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 	
 public class Robot extends SampleRobot 
 {
-  static final String  	PROGRAM_NAME = "RAC20-03.29.20-01";
+  static final String  	PROGRAM_NAME = "RAC20-08.03.20-01";
 
   public Properties		robotProperties;
   
@@ -95,6 +95,7 @@ public class Robot extends SampleRobot
         currentRobotState = RobotState.init;
 
    		LCD.clearAll();
+   		
    		LCD.printLine(1, "Mode: RobotInit");
       
    		// Read properties file from RoboRio "disk".
@@ -250,6 +251,7 @@ public class Robot extends SampleRobot
           Devices.robotDrive.setSafetyEnabled(false);
 
     	  LCD.clearAll();
+    	  
     	  LCD.printLine(1, "Mode: Autonomous");
             
     	  SmartDashboard.putBoolean("Disabled", false);
@@ -297,6 +299,7 @@ public class Robot extends SampleRobot
           Devices.robotDrive.setSafetyEnabled(false);
 
     	  LCD.clearAll();
+    	  
       	  LCD.printLine(1, "Mode: Teleop");
             
       	  SmartDashboard.putBoolean("Disabled", false);

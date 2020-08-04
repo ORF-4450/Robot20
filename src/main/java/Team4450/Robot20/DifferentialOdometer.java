@@ -21,6 +21,7 @@ public class DifferentialOdometer
 	private NavX						navx;
 	private DifferentialDriveOdometry	odometer;
 	private double						cumulativeLeftCount, cumulativeRightCount;
+	private double						lastLeftCount, lastRightCount;
 	
 	// This variable used to make this class is a singleton.
 	
@@ -78,12 +79,19 @@ public class DifferentialOdometer
 	 */
 	public Pose2d update()
 	{
-		// Odometer uses total encoder count since start of match (or odometer reset).
-		// So we need to track that as encoders can be reset at any time to facilitate
-		// navigation functions along the way.
+		// Update the odometer tracking robot position on the field. We have to track the
+		// cumulative encoder counts since at any time we can reset the encoders to facilitate
+		// driving functions like auto drive, alt driving mode and more. Odometer wants counts
+		// as total since start of match or last odometer reset.		
 		
-		cumulativeLeftCount += leftEncoder.getDistance(DistanceUnit.Meters);
-		cumulativeRightCount += leftEncoder.getDistance(DistanceUnit.Meters);
+		double left = leftEncoder.getDistance(DistanceUnit.Meters);
+		double right = rightEncoder.getDistance(DistanceUnit.Meters);
+		
+		cumulativeLeftCount += left - lastLeftCount;
+		cumulativeRightCount += right - lastRightCount;
+		
+		lastLeftCount = left;
+		lastRightCount = right;
 		
 		return odometer.update(navx.getTotalYaw2d(), cumulativeLeftCount, cumulativeRightCount);
 	}

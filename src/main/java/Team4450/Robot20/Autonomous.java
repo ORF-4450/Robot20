@@ -344,6 +344,8 @@ public class Autonomous
 		else
 			Devices.SetCANTalonBrakeMode(false);
 			
+		// Note: reset without delay may not actually reset the encoders before the first read
+		// of them below.
 		Devices.rightEncoder.reset();
 		
 		if (robot.isClone) Timer.delay(0.3);
@@ -422,8 +424,10 @@ public class Autonomous
 
 		if (stop == StopMotors.stop) Devices.robotDrive.stopMotor();				
 		
-		Util.consoleLog("end: actual count=%d  error=%.3f  ena=%b  isa=%b", Math.abs(getEncoderCounts()), 
-				(double) Math.abs(Devices.rightEncoder.get()) / encoderCounts, robot.isEnabled(), robot.isAutonomous());
+		double actualCount = Math.abs(getEncoderCounts());
+		
+		Util.consoleLog("end: actual count=%d  error=%.3f%  ena=%b  isa=%b", actualCount, 
+				(actualCount - encoderCounts) / encoderCounts * 100, robot.isEnabled(), robot.isAutonomous());
 	}
 	
 	/** 
