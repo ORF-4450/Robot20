@@ -34,7 +34,7 @@ public class DifferentialVelocityDrive extends MotorSafety
 	public final double trackWidth; 		// meters.
 	public final double p, i, d, ks, kv;
 	
-	private final SpeedController	leftController, rightController;
+	private final SpeedController				leftController, rightController;
 	
 	private final SRXMagneticEncoderRelative	leftEncoder, rightEncoder;
 
@@ -61,11 +61,11 @@ public class DifferentialVelocityDrive extends MotorSafety
 	 * @param kv				Feed forward velocity gain (volts * seconds / distance). 1 is a good default.
 	 */
 	public DifferentialVelocityDrive(SpeedController leftController, 
-						 SpeedController rightController,
-						 SRXMagneticEncoderRelative leftEncoder, 
-						 SRXMagneticEncoderRelative rightEncoder,
-						 double trackWidth, double maxSpeed, double maxAngularSpeed,
-						 double p, double i, double d, double ks, double kv) 
+						 			 SpeedController rightController,
+						 			 SRXMagneticEncoderRelative leftEncoder, 
+						 			 SRXMagneticEncoderRelative rightEncoder,
+						 			 double trackWidth, double maxSpeed, double maxAngularSpeed,
+						 			 double p, double i, double d, double ks, double kv) 
 	{
 		this.leftController = leftController;
 		this.rightController = rightController;
@@ -89,10 +89,10 @@ public class DifferentialVelocityDrive extends MotorSafety
 	}
 	
 	/**
-	 * Sets the desired wheel speeds by using current speeds and PID + Feed Forward
+	 * Sets the desired wheel speeds by using current desired speeds and PID + Feed Forward
 	 * controllers to calculate the motor voltage to sync actual to desired speed.
 	 *
-	 * @param speeds The desired wheel speeds.
+	 * @param speeds The desired wheel speeds in m/s.
 	 */
 	private void setSpeeds(DifferentialDriveWheelSpeeds speeds) 
 	{
@@ -107,18 +107,18 @@ public class DifferentialVelocityDrive extends MotorSafety
 	    // the PID factors. The P factor needs to scale the m/s error to voltage. Hence P for
 	    // max vel of 3 m/s and 12 volts max power is 12/3 or 4. The error * 4 is target voltage.
 	    
-	    final double leftOutput = leftPIDController.calculate(leftSpeed, speeds.leftMetersPerSecond);
-	    final double rightOutput = rightPIDController.calculate(rightSpeed, speeds.rightMetersPerSecond);
+	    double leftOutput = leftPIDController.calculate(leftSpeed, speeds.leftMetersPerSecond);
+	    double rightOutput = rightPIDController.calculate(rightSpeed, speeds.rightMetersPerSecond);
 	    
 	    // SetVoltage as a range of -12 to + 12. Internally, it is scaled by the actual battery voltage
-	    // to arrive at a % output in the -1 to +1 range which is sent to the set() function.
+	    // to arrive at a % output in the -1 to +1 range which is 
 	    
 	    leftController.setVoltage(leftOutput + leftFeedforward);
 	    rightController.setVoltage(rightOutput + rightFeedforward);
-	    
-//	    Util.consoleLog("lt=%.3f la=%.3f lo=%.3f lf=%.3f ls=%.3f - rt=%.3f ra=%.3f ro=%.3f rf=%.3f rs=%.3f",
-//	    		speeds.leftMetersPerSecond, leftSpeed, leftOutput, leftFeedforward, leftController.get(),
-//	    		speeds.rightMetersPerSecond, rightSpeed, rightOutput, rightFeedforward, rightController.get());
+
+	    Util.consoleLog("lt=%.3f la=%.3f lo=%.3f lf=%.3f ls=%.3f - rt=%.3f ra=%.3f ro=%.3f rf=%.3f rs=%.3f",
+	    		speeds.leftMetersPerSecond, leftSpeed, leftOutput, leftFeedforward, leftController.get(),
+	    		speeds.rightMetersPerSecond, rightSpeed, rightOutput, rightFeedforward, rightController.get());
 	    
 	    //feed();
 	}
@@ -146,6 +146,12 @@ public class DifferentialVelocityDrive extends MotorSafety
 			tankDrive(Util.squareInput(leftSpeed), Util.squareInput(rightSpeed));
 		else
 			tankDrive(leftSpeed, rightSpeed);
+	}
+	
+	public void tankDriveVolts(double leftPctPower, double rightPctPower)
+	{
+	    leftController.setVoltage(leftPctPower * 12.0);
+	    rightController.setVoltage(rightPctPower * 12.0);
 	}
 	
 	/**

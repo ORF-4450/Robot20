@@ -35,7 +35,7 @@ public class Devices
 	  //public static DifferentialDrive	robotDrive;
 	  public static DifferentialVelocityDrive		robotDrive;
 	  
-	  public static SpeedControllerGroup	winchDrive;
+	  public static SpeedControllerGroup			winchDrive;
 	  
 	  public static JoyStick			rightStick = null;
 	  public static JoyStick			leftStick = null;
@@ -142,7 +142,7 @@ public class Devices
 	      colorWheelVictor.setNeutralMode(NeutralMode.Brake);
 		  
 		  // Configure SRX encoders as needed for measuring velocity and distance. 
-		  // 7.5 is wheel diameter in inches. Adjust for each years robot.
+		  // 6.125 is wheel diameter in inches. Adjust for each years robot.
 		  rightEncoder = new SRXMagneticEncoderRelative(RRCanTalon, 6.125);
 		  leftEncoder = new SRXMagneticEncoderRelative(LRCanTalon, 6.125);
 		  
@@ -155,10 +155,11 @@ public class Devices
 		  RFCanTalon.set(ControlMode.Follower, RRCanTalon.getDeviceID());
 		  
 		  //robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
+		  
 		  // Track width = 23in, max speed = 3 m/s, max angular = one rotation/s, p = 12 / max speed, i = 0, d = 0,
 		  // ks = 1, kv = 1.
 		  robotDrive = new DifferentialVelocityDrive(LRCanTalon, RRCanTalon, leftEncoder, rightEncoder, 23, 3.0, 2 * Math.PI,
-				  						 12 / 3, 0, 0, 1, 1);	// 12 / 3.0
+				  									12 / 3, 0, 0, 1, 1);	
 		  
 		  //shooterEncoder = new SRXMagneticEncoderRelative(shooterTalon, 5.8);
 		  
