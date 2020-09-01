@@ -3,13 +3,52 @@ package Team4450.Robot20;
 import Team4450.Lib.SRXMagneticEncoderRelative;
 import Team4450.Lib.SRXMagneticEncoderRelative.PIDRateType;
 import Team4450.Lib.Util;
-import edu.wpi.first.wpilibj.MotorSafety;
+
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
+import edu.wpi.first.wpiutil.math.MathUtil;
+
+/*
+ * Notes: Completed 8-31-2020. Works but not really an improvement over
+ * regular driving. However, due to Covid-19, we were never able to do
+ * the characterization tests and get correct feed forward gains. The
+ * FF gains used in this project are a guess and until we have the
+ * correct gains, we can't really decide the value of velocity based
+ * drive control. Its supposed to be smoother and a better way to 
+ * control driving but as it stands now, it seems somewhat less smooth
+ * and more touchy. Need to retest once we have correct gains and then
+ * decide. 
+ * 
+ * One thing that is observed as that when you set power to zero, the
+ * robot stops but then rocks back and forth one oscillation before 
+ * motion stops. Suspect this is an aspect of the PID control used in
+ * the voltage calculation.
+ * 
+ * Note we are driving based on a percent of max velocity but the 
+ * characterization gains are in units of voltage so the result of
+ * the pid and FF calculations is voltages representing velocity.
+ * It all seems overly complicated but recommended by Wpilib developers.
+ * Note that this code is based on Wpilib examples so it should do what
+ * they say. Have to wait for characterization and correct gains to make
+ * a final determination of the value of velocity driving. Note that the
+ * FIRST examples of trapezoidal motion control and Ramsete path following
+ * use this style of velocity based control through voltages.
+ * 
+ * Final note: during testing of this code it really became apparent that
+ * running the drive talons in brake mode contributes to jerky robot motion.
+ * This code turns off brakes as the driving default and motion seems better
+ * in both normal and velocity driving. Note also that squared inputs and
+ * setting the talon ramp rate to 0.5 second does not seem to make that
+ * much difference.
+ */
 
 /**
  * Velocity drive controls drive base motors in tank configuration based on
@@ -27,7 +66,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
  * synchronous PID controller to work correctly. Do not change it to use
  * the threaded PID controller from either Wpilib or the copy in Robotlib.
  */
-public class DifferentialVelocityDrive extends MotorSafety
+public class DifferentialVelocityDrive extends RobotDriveBase implements Sendable, AutoCloseable
 {
 	public final double maxSpeed; 			// meters per second.
 	public final double maxAngularSpeed;	// radians per second.
@@ -38,12 +77,14 @@ public class DifferentialVelocityDrive extends MotorSafety
 	
 	private final SRXMagneticEncoderRelative	leftEncoder, rightEncoder;
 
-	private final PIDController leftPIDController;
-	private final PIDController rightPIDController;
+	private final PIDController 				leftPIDController;
+	private final PIDController 				rightPIDController;
 	
-	private final DifferentialDriveKinematics kinematics;
+	private final DifferentialDriveKinematics 	kinematics;
 	
-	private final SimpleMotorFeedforward feedforward;
+	private final SimpleMotorFeedforward 		feedforward;
+	
+	private static int	instances;
 	
 	/**
 	 * Constructs a Velocity drive object.
@@ -86,6 +127,11 @@ public class DifferentialVelocityDrive extends MotorSafety
 		kinematics = new DifferentialDriveKinematics(trackWidth);
 		
 		feedforward = new SimpleMotorFeedforward(ks, kv);
+		
+	    SendableRegistry.addChild(this, leftController);
+	    SendableRegistry.addChild(this, rightController);
+	    instances++;
+	    SendableRegistry.addLW(this, getDescription(), instances);
 	}
 	
 	/**
@@ -97,30 +143,30 @@ public class DifferentialVelocityDrive extends MotorSafety
 	private void setSpeeds(DifferentialDriveWheelSpeeds speeds) 
 	{
 		// Feed forwards are in volts.
-	    final double leftFeedforward = 0;	//feedforward.calculate(speeds.leftMetersPerSecond);
-	    final double rightFeedforward = 0;	//feedforward.calculate(speeds.rightMetersPerSecond);
+	    final double leftFeedforward = feedforward.calculate(speeds.leftMetersPerSecond);
+	    final double rightFeedforward = feedforward.calculate(speeds.rightMetersPerSecond);
 	    
 	    final double leftSpeed = leftEncoder.getVelocity(PIDRateType.velocityMPS);
 	    final double rightSpeed = rightEncoder.getVelocity(PIDRateType.velocityMPS);
 	
 	    // PID output is in m/s, as the error is target vel minus actual vel, multiplied by
 	    // the PID factors. The P factor needs to scale the m/s error to voltage. Hence P for
-	    // max vel of 3 m/s and 12 volts max power is 12/3 or 4. The error * 4 is target voltage.
+	    // max vel of 2 m/s and 12 volts max power is 12/2 or 6. The error * 6 is target voltage.
 	    
 	    double leftOutput = leftPIDController.calculate(leftSpeed, speeds.leftMetersPerSecond);
 	    double rightOutput = rightPIDController.calculate(rightSpeed, speeds.rightMetersPerSecond);
 	    
 	    // SetVoltage as a range of -12 to + 12. Internally, it is scaled by the actual battery voltage
-	    // to arrive at a % output in the -1 to +1 range which is 
+	    // to arrive at a % output in the -1 to +1 range which is sent to controller set() method.
 	    
 	    leftController.setVoltage(leftOutput + leftFeedforward);
 	    rightController.setVoltage(rightOutput + rightFeedforward);
 
-	    Util.consoleLog("lt=%.3f la=%.3f lo=%.3f lf=%.3f ls=%.3f - rt=%.3f ra=%.3f ro=%.3f rf=%.3f rs=%.3f",
-	    		speeds.leftMetersPerSecond, leftSpeed, leftOutput, leftFeedforward, leftController.get(),
-	    		speeds.rightMetersPerSecond, rightSpeed, rightOutput, rightFeedforward, rightController.get());
+//	    Util.consoleLog("lt=%.3f la=%.3f lo=%.3f lf=%.3f ls=%.3f - rt=%.3f ra=%.3f ro=%.3f rf=%.3f rs=%.3f",
+//	    		speeds.leftMetersPerSecond, leftSpeed, leftOutput, leftFeedforward, leftController.get(),
+//	    		speeds.rightMetersPerSecond, rightSpeed, rightOutput, rightFeedforward, rightController.get());
 	    
-	    //feed();
+	    feed();
 	}
 	
 	/**
@@ -130,19 +176,40 @@ public class DifferentialVelocityDrive extends MotorSafety
 	 */
 	public void tankDrive(double leftSpeed, double rightSpeed)
 	{
-		setSpeeds(new DifferentialDriveWheelSpeeds(leftSpeed * maxSpeed, rightSpeed * maxSpeed));
+		// Dead band defaults to .02, max output defaults to 1.0.
+		
+	    leftSpeed = MathUtil.clamp(leftSpeed * m_maxOutput, -1.0, 1.0);
+	    leftSpeed = applyDeadband(leftSpeed, m_deadband);
+
+	    rightSpeed = MathUtil.clamp(rightSpeed * m_maxOutput, -1.0, 1.0);
+	    rightSpeed = applyDeadband(rightSpeed, m_deadband);
+
+	    setSpeeds(new DifferentialDriveWheelSpeeds(leftSpeed * maxSpeed, rightSpeed * maxSpeed));
+		
+		//leftController.set(leftSpeed);
+		//rightController.set(rightSpeed);
+		
+		feed();
 	}
 	
 	/**
 	 * Drives the robot with the given linear velocities for left and right motors. This is tank style.
 	 * @param leftSpeed		Linear velocity as a % of max speed. Ranges -1 to +1, + is forward unit is m/s.
 	 * @param rightSpeed	Linear velocity as a % of max speed. Ranges -1 to +1, + is forward unit is m/s.
-	 * @param squaredInputs True to scale the input speeds with the Util.squareInput() function to make
-	 * 						inputs more gentle.
+	 * @param squaredInputs True to scale the input values with the Util.squareInput() function to make small
+	 * 						inputs more gentle but still provide max speed.
 	 */
 	public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs)
 	{
-		if (squaredInputs)
+		// Dead band defaults to .02, max output defaults to 1.0.
+		
+	    leftSpeed = MathUtil.clamp(leftSpeed * m_maxOutput, -1.0, 1.0);
+	    leftSpeed = applyDeadband(leftSpeed, m_deadband);
+
+	    rightSpeed = MathUtil.clamp(rightSpeed * m_maxOutput, -1.0, 1.0);
+	    rightSpeed = applyDeadband(rightSpeed, m_deadband);
+
+	    if (squaredInputs)
 			tankDrive(Util.squareInput(leftSpeed), Util.squareInput(rightSpeed));
 		else
 			tankDrive(leftSpeed, rightSpeed);
@@ -152,31 +219,66 @@ public class DifferentialVelocityDrive extends MotorSafety
 	{
 	    leftController.setVoltage(leftPctPower * 12.0);
 	    rightController.setVoltage(rightPctPower * 12.0);
+	    
+	    feed();
 	}
 	
 	/**
 	 * Drives the robot with the given linear velocity and angular velocity.
 	 * This is arcade style.
-	 * @param fbSpeed 	Linear velocity as a % of max speed (forward/backward). Ranges -1 to +1, + is forward.
+	 * @param speed 	Linear velocity as a % of max speed (forward/backward). Ranges -1 to +1, + is forward.
 	 * @param rot		Angular velocity as a % of max angular speed. Ranges -1 to +1, + is right.
-	*/
-	public void arcadeDrive(double fbSpeed, double rot)
+	 */
+	public void arcadeDrive(double speed, double rotation)
 	{
-		// Note we invert rot because we like to work + as clockwise, but ChassisSpeeds expects + to be counter
+		// Dead band defaults to .02, max output defaults to 1.0.
+		
+	    speed = MathUtil.clamp(speed * m_maxOutput, -1.0, 1.0);
+	    speed = applyDeadband(speed, m_deadband);
+
+	    rotation = MathUtil.clamp(rotation * m_maxOutput, -1.0, 1.0);
+	    rotation = applyDeadband(rotation, m_deadband);
+
+	    // Note we invert rotation because we like to work + as clockwise, but ChassisSpeeds expects + to be counter
 		// clockwise. Also note that the Y axis speed is zero since tank robot can't move sideways.
-		DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(new ChassisSpeeds(fbSpeed * maxSpeed, 
-				0.0, -rot * maxAngularSpeed));
+		
+		DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(new ChassisSpeeds(speed * maxSpeed, 
+				0.0, -rotation * maxAngularSpeed));
 		
 	    setSpeeds(wheelSpeeds);
 	}
 	
 	/**
+	 * Drives the robot with the given linear velocity and angular velocity.
+	 * This is arcade style.
+	 * @param speed 	Linear velocity as a % of max speed (forward/backward). Ranges -1 to +1, + is forward.
+	 * @param rot		Angular velocity as a % of max angular speed. Ranges -1 to +1, + is right.
+	 * @param squaredInputs True to scale the input values with the Util.squareInput() function to make small
+	 * 						inputs more gentle but still provide max speed.
+	 */
+	public void arcadeDrive(double speed, double rotation, boolean squaredInputs)
+	{
+		// Dead band defaults to .02, max output defaults to 1.0.
+		
+	    speed = MathUtil.clamp(speed * m_maxOutput, -1.0, 1.0);
+	    speed = applyDeadband(speed, m_deadband);
+
+	    rotation = MathUtil.clamp(rotation * m_maxOutput, -1.0, 1.0);
+	    rotation = applyDeadband(rotation, m_deadband);
+
+	    if (squaredInputs)
+			arcadeDrive(Util.squareInput(speed), Util.squareInput(rotation));
+		else
+			arcadeDrive(speed, rotation);
+	}
+	
+	/**
 	 * Not Implemented.
-	 * @param fbSpeed
+	 * @param speed
 	 * @param curve
 	 * @param quickTurn
 	 */
-	public void curvatureDrive(double fbSpeed, double curve, boolean quickTurn)
+	public void curvatureDrive(double speed, double curve, boolean quickTurn)
 	{
 		
 	}
@@ -188,12 +290,41 @@ public class DifferentialVelocityDrive extends MotorSafety
 	{
 	    leftController.stopMotor();
 	    rightController.stopMotor();
+	    
 	    feed();
 	}
 
+	/**
+	 * Get object description.
+	 * @return The object description.
+	 */
 	@Override
 	public String getDescription()
 	{
-		return "";
+		return "DifferentialVelocityDrive";
+	}
+
+	/**
+	 * Release any resources held by this object.
+	 * @throws Exception
+	 */
+	@Override
+	public void close() throws Exception
+	{
+	    SendableRegistry.remove(this);
+	}
+
+	/**
+	 * Initialize this object as a Sendable. Not to be called by
+	 * programmers.
+	 * @param builder
+	 */
+	@Override
+	public void initSendable(SendableBuilder builder) {
+	    builder.setSmartDashboardType("DifferentialDrive");
+	    builder.setActuator(true);
+	    builder.setSafeState(this::stopMotor);
+	    builder.addDoubleProperty("Left Motor Speed", leftController::get, leftController::set);
+	    builder.addDoubleProperty("Right Motor Speed", rightController::get, rightController::set);
 	}
 }

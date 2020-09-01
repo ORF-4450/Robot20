@@ -185,13 +185,21 @@ class Teleop
 			LCD.printLine(7, "Lmax vel=%.3f - Rmax vel=%.3f", Devices.leftEncoder.getMaxVelocity(PIDRateType.velocityMPS),
 					 Devices.rightEncoder.getMaxVelocity(PIDRateType.velocityMPS));
 			//LCD.printLine(7, "shooter rpm=%d", Devices.shooterEncoder.getRPM());
-			LCD.printLine(8, "rate=%d  maxrate=%d  rpm=%d  maxrpm=%d  vel=%.3f  maxvel=%.3f", 
+			LCD.printLine(8, "left side rate=%d  maxrate=%d  rpm=%d  maxrpm=%d  vel=%.3f  maxvel=%.3f", 
 					Devices.leftEncoder.getRate(PIDRateType.ticksPer100ms), 
 					Devices.leftEncoder.getMaxRate(PIDRateType.ticksPer100ms),
 					Devices.leftEncoder.getRPM(),
 					Devices.leftEncoder.getMaxRPM(),
 					Devices.leftEncoder.getVelocity(PIDRateType.velocityMPS),
 					Devices.leftEncoder.getMaxVelocity(PIDRateType.velocityMPS)
+					);
+			LCD.printLine(9, "right side rate=%d  maxrate=%d  rpm=%d  maxrpm=%d  vel=%.3f  maxvel=%.3f", 
+					Devices.rightEncoder.getRate(PIDRateType.ticksPer100ms), 
+					Devices.rightEncoder.getMaxRate(PIDRateType.ticksPer100ms),
+					Devices.rightEncoder.getRPM(),
+					Devices.rightEncoder.getMaxRPM(),
+					Devices.rightEncoder.getVelocity(PIDRateType.velocityMPS),
+					Devices.rightEncoder.getMaxVelocity(PIDRateType.velocityMPS)
 					);
 			//LCD.printLine(6, "gyro angle=%f  center=%d  offset=%f", Devices.gyro.getAngle(), Devices.gyro.getCenter(), Devices.gyro.getOffset());
 
@@ -244,8 +252,8 @@ class Teleop
 					SmartDashboard.putBoolean("SteeringAssist", steeringAssistMode);
 				}
 				else
-					//Devices.robotDrive.tankDrive(leftY, rightY, true);		// Normal tank drive.
-					Devices.robotDrive.tankDriveVolts(leftY, rightY);
+					Devices.robotDrive.tankDrive(leftY, rightY, true);		// Normal tank drive.
+					//Devices.robotDrive.tankDriveVolts(leftY, rightY);
 				
 					// This shows how to use curvature drive mode, toggled by trigger (for testing).
 					//Devices.robotDrive.curvatureDrive(rightY, rightX, rightStick.GetLatchedState(JoyStickButtonIDs.TRIGGER));

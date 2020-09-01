@@ -127,8 +127,8 @@ public class Devices
 		  
 		  pickupTalon.setInverted(true);
 
-	      // Turn on brake mode for drive CAN Talons.
-	      SetCANTalonBrakeMode(true);
+	      // Turn off brake mode for drive CAN Talons.
+	      SetCANTalonBrakeMode(false);
 	      
 //	      shooterTalon.setInverted(true);
 //	      shooterTalon.setNeutralMode(NeutralMode.Coast);
@@ -156,10 +156,10 @@ public class Devices
 		  
 		  //robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
 		  
-		  // Track width = 23in, max speed = 3 m/s, max angular = one rotation/s, p = 12 / max speed, i = 0, d = 0,
+		  // Track width = 23in, max speed = 2 m/s, max angular = one rotation/s, p = 12 / max speed, i = 0, d = 0,
 		  // ks = 1, kv = 1.
-		  robotDrive = new DifferentialVelocityDrive(LRCanTalon, RRCanTalon, leftEncoder, rightEncoder, 23, 3.0, 2 * Math.PI,
-				  									12 / 3, 0, 0, 1, 1);	
+		  robotDrive = new DifferentialVelocityDrive(LRCanTalon, RRCanTalon, leftEncoder, rightEncoder, 23, 2.0, 2 * Math.PI,
+				  									12 / 2, 0, 0, 1, 6);	
 		  
 		  //shooterEncoder = new SRXMagneticEncoderRelative(shooterTalon, 5.8);
 		  
@@ -181,10 +181,6 @@ public class Devices
 
  		  // Create utility stick with all buttons monitored and auto start.
  		  utilityStick = new JoyStick(new Joystick(2), "UtilityStick");
- 		  utilityStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
- 		  utilityStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
- 		  utilityStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
- 		  utilityStick.Start();
  		  
  		  utilityStick.invertX(true);
  		  
@@ -234,6 +230,10 @@ public class Devices
 		  RRCanTalon.setNeutralMode(newMode);
 	  }
 	  
+	  /**
+	   * Return drive talon brake mode.
+	   * @return True = brake, false = coast.
+	   */
 	  public static boolean isBrakeMode()
 	  {
 		  return talonBrakeMode;
