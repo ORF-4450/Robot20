@@ -52,13 +52,14 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 
 /**
  * Velocity drive controls drive base motors in tank configuration based on
- * target velocity, specified as +-0->1 input times the max velocity of the
- * robot. Feed forward is computed from the desired velocity and the
+ * target velocity, specified as -1 to +1 (%) input times the max velocity 
+ * of the robot. Feed forward is computed from the desired velocity and the
  * ks and kv gain values determined by the Characterization process. These
  * values are in units of voltage so the feed forward calculation results
- * in a target voltage. The PID controllers add an additional amount based
- * on the error between target velocity and actual velocity. 
- * Motors are controlled by setting voltage which compensates for battery
+ * in a target voltage representing the path to target velocity. The PID 
+ * controllers add an additional amount based on the error between target
+ * velocity and actual velocity. Motors are controlled by setting voltage 
+ * on the internally which compensates for battery
  * voltage decline as robot operates. Velocities are in meters/second.
  * You must measure max velocity, max angular velocity, ks and kv for each
  * robot that uses this class to get correct results. Use the FIRST robot
@@ -95,7 +96,7 @@ public class DifferentialVelocityDrive extends RobotDriveBase implements Sendabl
 	 * @param trackWidth		Track width of robot in inches.
 	 * @param maxSpeed			Max speed of robot in m/s.
 	 * @param maxAngularSpeed	Max angular speed of robot in radians/s.
-	 * @param p					P term for PID controllers. 1 is a good default.
+	 * @param p					P term for PID controllers. 12 / maxSpeed is a good default.
 	 * @param i					I term for PID controllers. 0 is a good default.
 	 * @param d					D term for PID controllers. 0 is a good default.
 	 * @param ks				Feed forward static gain (volts). 1 is a good default.
@@ -135,7 +136,7 @@ public class DifferentialVelocityDrive extends RobotDriveBase implements Sendabl
 	}
 	
 	/**
-	 * Sets the desired wheel speeds by using current desired speeds and PID + Feed Forward
+	 * Sets the desired wheel speeds by using current measured speeds and PID + Feed Forward
 	 * controllers to calculate the motor voltage to sync actual to desired speed.
 	 *
 	 * @param speeds The desired wheel speeds in m/s.
@@ -215,8 +216,22 @@ public class DifferentialVelocityDrive extends RobotDriveBase implements Sendabl
 			tankDrive(leftSpeed, rightSpeed);
 	}
 	
+	/**
+	 * Drives the robot with the given percent voltage level without any
+	 * PID control. This is tank style.
+	 * @param leftPctPower	% of max voltage to apply. Ranges -1 to +1, + is forward.
+	 * @param rightPctPower	% of max voltage to apply. Ranges -1 to +1, + is forward.
+	 */
 	public void tankDriveVolts(double leftPctPower, double rightPctPower)
 	{
+		// Dead band defaults to .02, max output defaults to 1.0.
+		
+	    leftPctPower = MathUtil.clamp(leftPctPower * m_maxOutput, -1.0, 1.0);
+	    leftPctPower = applyDeadband(leftPctPower, m_deadband);
+
+	    rightPctPower = MathUtil.clamp(rightPctPower * m_maxOutput, -1.0, 1.0);
+	    rightPctPower = applyDeadband(rightPctPower, m_deadband);
+	    
 	    leftController.setVoltage(leftPctPower * 12.0);
 	    rightController.setVoltage(rightPctPower * 12.0);
 	    
